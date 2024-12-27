@@ -1,8 +1,9 @@
 #include "mqtt_alilot.h"
 
 static esp_mqtt_client_handle_t mqtt_hanlde;
-
+static uint16_t data_id = 0;        //每条消息的ID
 #define TAG     "MQTT"
+
 /*阿里证书*/
 const char* g_aliot_ca = "-----BEGIN CERTIFICATE-----\n"
 "MIIDdTCCAl2gAwIBAgILBAAAAAABFUtaw5QwDQYJKoZIhvcNAQEFBQAwVzELMAkG"
@@ -11,7 +12,7 @@ const char* g_aliot_ca = "-----BEGIN CERTIFICATE-----\n"
 "MDBaFw0yODAxMjgxMjAwMDBaMFcxCzAJBgNVBAYTAkJFMRkwFwYDVQQKExBHbG9i"
 "YWxTaWduIG52LXNhMRAwDgYDVQQLEwdSb290IENBMRswGQYDVQQDExJHbG9iYWxT"
 "aWduIFJvb3QgQ0EwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDaDuaZ"
-"jc6j40+Kfvvxi4Mla+pIH/EqsLmVEQS98GPR4mdmzxzdzxtIK+6NiY6arymAZavp"
+"jc6j40+Kfvvxi4Mla+pIH/EqsLmVEQS98GPR4mdatazxzdzxtIK+6NiY6arymAZavp"
 "xy0Sy6scTHAHoT0KMM0VjU/43dSMUBUc71DuxC73/OlS8pF94G3VNTCOXkNz8kHp"
 "1Wrjsok6Vjk4bwY8iGlbKk3Fp1S4bInMm/k8yuX9ifUSPJJ4ltbcdG6TRGHRjcdG"
 "snUOhugZitVtbNV4FpWi6cgKOOvyJBNPc1STE4U6G7weNLWLBYy5d4ux2x8gkasJ"
@@ -98,6 +99,72 @@ void core_hex2str(uint8_t *input, uint32_t input_len, char *output, uint8_t lowe
         output[j++] = encode[(input[i]) & 0xf];
     }
     output[j] = 0;
+}
+
+/*根据事件类型创建数据结构体*/
+Alilot_t Alilot_Creat_data(ALIOT_TYPE event)
+{
+    ALIOT_data_DES* data = (ALIOT_data_DES*)malloc(sizeof(ALIOT_data_DES));
+    if(data)
+    {
+        memset(data,0,sizeof(ALIOT_data_DES));
+        data->data_str = cJSON_CreateObject();
+        char id[10];
+        snprintf(id,10,"%lu",data_id++);
+        cJSON_AddStringToObject(data->data_str,"id",id);
+        cJSON_AddStringToObject(data->data_str,"version","1.0");
+        switch(event)
+        {
+            case ALIOT_data_POST:      //常规属性上报
+                cJSON_AddObjectToObject(data->data_str,"params");
+                cJSON_AddStringToObject(data->data_str,"method","thing.event.property.post");
+                break;
+            case ALIOT_data_SET_ACK:   //属性设置回复
+                cJSON_AddObjectToObject(data->data_str,"data");
+                break;
+            case ALIOT_data_EVENT:     //事件上报
+                cJSON_AddObjectToObject(data->data_str,"params");
+                break;
+            default:break;
+        }
+        
+        return data;
+    }
+    return NULL;
+
+}
+
+/*将数据结构转为字符串*/
+void Alilot_generate_str(Alilot_t *data)
+{
+    if(data)    //确保数据结构体存在
+    {
+        if(data->data_str)  //若数组不为空
+        {
+            cJSON_free(data->data_str);
+            data->data_str = NULL;
+        }
+        data->data_str = cJSON_PrintUnformatted(data->str);
+        data->len = strlen(data->data_str);
+    }
+}
+
+/*阿里云数据释放*/
+void Alilot_Free(Alilot_t ^data)
+{
+    if(data)
+    {
+        if(data->data_str)              //若数组不为空
+        {
+            ESP_LOGI(TAG,"data_str free : %s",data->data_str);
+            cJSON_free(data->data_str);
+        }
+        if(data->str)                   //若还存在根节点
+        {
+            ESP_LOGI(TAG,"str Delet : %s",data->str);
+            cJSON_Delete(data->str);
+        }
+    }
 }
 
 void mqtt_start(void)

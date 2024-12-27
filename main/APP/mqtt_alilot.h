@@ -9,6 +9,7 @@
 #include "esp_wifi.h"
 #include "esp_event.h"
 #include "esp_log.h"
+#include "cJSON.h"
 
 /*mqtt服务器端口号*/
 #define ALILOT_PORT   1883
@@ -39,6 +40,27 @@
 
 /*mqtt服务器网址*/
 #define MQTT_URL        "mqtts://iot-06z00d9wc4x18a6.mqtt.iothub.aliyuncs.com"
+
+/*事件类型*/
+typedef enum
+{
+    ALIOT_DM_POST,      //常规属性上报
+    ALIOT_DM_SET_ACK,   //属性设置回复
+    ALIOT_DM_EVENT,     //事件上报
+}ALIOT_TYPE;
+
+/*设备属性上报主题*/
+#define    Attribute_TOPIC "/"ProductKey"/"ALILOT_DEVICE_NAME"/thing/event/property/post"
+
+
+
+/*上报数据结构体*/
+typedef struct{
+    char *data_str;
+    int len;
+    cJSON *str;         //根节点
+    char *topic;        //主题
+}Alilot_t;
 
 void mqtt_start(void);
 
