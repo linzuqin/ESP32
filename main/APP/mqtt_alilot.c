@@ -2,6 +2,7 @@
 
 static esp_mqtt_client_handle_t mqtt_hanlde;
 static uint16_t data_id = 0;        //每条消息的ID
+
 #define TAG     "MQTT"
 
 /*阿里证书*/
@@ -26,37 +27,38 @@ const char* g_aliot_ca = "-----BEGIN CERTIFICATE-----\n"
 "DKqC5JlR3XC321Y9YeRq4VzW9v493kHMB65jUr9TU/Qr6cf9tveCX4XSQRjbgbME"
 "HMUfpIBvFSDJ3gyICh3WZlXi/EjJKSZp4A==\n"
 "-----END CERTIFICATE-----";
-// void mqtt_event_callback(void* event_handler_arg,
-//                                     esp_event_base_t event_base,
-//                                     int32_t event_id,
-//                                     void* event_data)
-// {
-//     esp_mqtt_event_handle_t data = (esp_mqtt_event_handle_t)event_data;
-//     switch(event_id)
-//     {
-//         case MQTT_EVENT_CONNECTED:      //MQTT连接成功
-//             ESP_LOGI(TAG,"MQTT CONNECT SUCCESSFULLY");
-//             break;
+
+void mqtt_event_callback(void* event_handler_arg,
+                                    esp_event_base_t event_base,
+                                    int32_t event_id,
+                                    void* event_data)
+{
+    esp_mqtt_event_handle_t data = (esp_mqtt_event_handle_t)event_data;
+    switch(event_id)
+    {
+        case MQTT_EVENT_CONNECTED:      //MQTT连接成功
+            ESP_LOGI(TAG,"MQTT CONNECT SUCCESSFULLY");
+            break;
         
-//         case MQTT_EVENT_DISCONNECTED:   //MQTT断开连接
-//             ESP_LOGI(TAG,"MQTT DISCONNECT");
-//             break;
+        case MQTT_EVENT_DISCONNECTED:   //MQTT断开连接
+            ESP_LOGI(TAG,"MQTT DISCONNECT");
+            break;
         
-//         case MQTT_EVENT_PUBLISHED:      //MQTT服务器下发数据
-//             ESP_LOGI(TAG,"MQTT PUB...");
-//             break;
+        case MQTT_EVENT_PUBLISHED:      //MQTT服务器下发数据
+            ESP_LOGI(TAG,"MQTT PUB...");
+            break;
 
-//         case MQTT_EVENT_SUBSCRIBED:     //MQTT服务器上报
-//             ESP_LOGI(TAG,"MQTT SUB...");
-//             break;
+        case MQTT_EVENT_SUBSCRIBED:     //MQTT服务器上报
+            ESP_LOGI(TAG,"MQTT SUB...");
+            break;
 
-//         case MQTT_EVENT_DATA:
-//             ESP_LOGI(TAG,"TOPIC:%s",data->topic);
-//             ESP_LOGI(TAG,"DATA: %s",data->data);
-//             break;
+        case MQTT_EVENT_DATA:
+            ESP_LOGI(TAG,"TOPIC:%s",data->topic);
+            ESP_LOGI(TAG,"DATA: %s",data->data);
+            break;
 
-//     }
-// }
+    }
+}
 
 char * get_clientid(void)
 {
@@ -102,7 +104,7 @@ void core_hex2str(uint8_t *input, uint32_t input_len, char *output, uint8_t lowe
 }
 
 /*根据事件类型创建数据结构体*/
-Alilot_t *Alilot_Creat_data(ALIOT_TYPE event)
+static Alilot_t *Alilot_Creat_data(ALIOT_TYPE event)
 {
     Alilot_t* data = (Alilot_t*)malloc(sizeof(Alilot_t));
     if(data)
@@ -137,7 +139,7 @@ Alilot_t *Alilot_Creat_data(ALIOT_TYPE event)
 }
 
 /*将数据结构转为字符串*/
-void Alilot_generate_str(Alilot_t *data)
+static void Alilot_generate_str(Alilot_t *data)
 {
     if(data)    //确保数据结构体存在
     {
@@ -152,7 +154,7 @@ void Alilot_generate_str(Alilot_t *data)
 }
 
 /*阿里云数据释放*/
-void Alilot_Free(Alilot_t *data)
+static void Alilot_Free(Alilot_t *data)
 {
     if(data)
     {
@@ -170,7 +172,7 @@ void Alilot_Free(Alilot_t *data)
 }
 
 /*向阿里云数据结构体中添加整形类型数据*/
-void Alilot_Data_Add_int(Alilot_t* data,const char* name, int value)
+static void Alilot_Data_Add_int(Alilot_t* data,const char* name, int value)
 {
     if(data)            //若传入的数据结构体不为空
     {
@@ -186,7 +188,7 @@ void Alilot_Data_Add_int(Alilot_t* data,const char* name, int value)
 }
 
 /*向阿里云数据结构体中添加字符串类型数据*/
-void Alilot_Data_Add_str(Alilot_t* data,const char* name, const char * value)
+static void Alilot_Data_Add_str(Alilot_t* data,const char* name, const char * value)
 {
     if(data)            //若传入的数据结构体不为空
     {
@@ -202,7 +204,7 @@ void Alilot_Data_Add_str(Alilot_t* data,const char* name, const char * value)
 }
 
 /*向阿里云数据结构体中添加浮点类型数据*/
-void Alilot_Data_Add_double(Alilot_t* data,const char* name, double value)
+static void Alilot_Data_Add_double(Alilot_t* data,const char* name, double value)
 {
     if(data)            //若传入的数据结构体不为空
     {
@@ -217,7 +219,37 @@ void Alilot_Data_Add_double(Alilot_t* data,const char* name, double value)
     }
 }
 
-void mqtt_start(void)
+/*向阿里云服务器上报整型数据*/
+void Aliot_post_property_int(const char* name,int value)
+{
+    Alilot_t *data = Alilot_Creat_data(ALIOT_data_POST);
+    Alilot_Data_Add_int(data , name , value);
+    Alilot_generate_str(data);
+    esp_mqtt_client_publish(mqtt_hanlde , POST_TOPIC , data->data_str , data->len,1,0);
+    Alilot_Free(data);
+}
+
+/*向阿里云服务器上报浮点型数据*/
+void Aliot_post_property_double(const char* name,double value)
+{
+    Alilot_t *data = Alilot_Creat_data(ALIOT_data_POST);
+    Alilot_Data_Add_double(data , name , value);
+    Alilot_generate_str(data);
+    esp_mqtt_client_publish(mqtt_hanlde , POST_TOPIC , data->data_str , data->len,1,0);
+    Alilot_Free(data);
+}
+
+/*向阿里云服务器上报字符串数据*/
+void Aliot_post_property_str(const char* name,char* value)
+{
+    Alilot_t *data = Alilot_Creat_data(ALIOT_data_POST);
+    Alilot_Data_Add_str(data , name , value);
+    Alilot_generate_str(data);
+    esp_mqtt_client_publish(mqtt_hanlde , POST_TOPIC , data->data_str , data->len,1,0);
+    Alilot_Free(data);
+}
+
+void Alilot_mqtt_run(void * arg )
 {
     /*配置mqtt连接参数*/
     esp_mqtt_client_config_t mqtt_cfg={0};
@@ -252,8 +284,19 @@ void mqtt_start(void)
     mqtt_hanlde = esp_mqtt_client_init(&mqtt_cfg);
 
     /*注册mqtt事件回调函数*/
-    //esp_mqtt_client_register_event(mqtt_hanlde,ESP_EVENT_ANY_ID,mqtt_event_callback,NULL);
+    esp_mqtt_client_register_event(mqtt_hanlde,ESP_EVENT_ANY_ID,mqtt_event_callback,mqtt_hanlde);
 
     /*启动mqtt连接*/
     esp_mqtt_client_start(mqtt_hanlde);
+
+    while(1)
+    {
+        
+        vTaskDelay(60*1000/portTICK_PERIOD_MS);
+    }
 }
+void Alilot_mqtt_start(void)
+{
+    xTaskCreatePinnedToCore(Alilot_mqtt_run, "aliot_run", 4096, NULL,3, NULL, tskNO_AFFINITY);
+}
+

@@ -1,7 +1,8 @@
 #include "WIFI.h"
 #define TAG     "WIFI"
+static EventGroupHandle_t s_wifi_event_group;
+extern EventGroupHandle_t s_wifi_ev;
 
-static SemaphoreHandle_t wifi_connect_sem = NULL;
 /*wifi事件回调函数*/
 void wifi_event_handle(void* event_handler_arg,
                                     esp_event_base_t event_base,
@@ -14,24 +15,21 @@ void wifi_event_handle(void* event_handler_arg,
         switch(event_id)
         {
             case WIFI_EVENT_STA_START:      //开始进行连接
+                xEventGroupSetBits(s_wifi_ev,0);
                 esp_wifi_connect();
                 break;
 
             case WIFI_EVENT_STA_CONNECTED:  //连接成功
                 ESP_LOGI(TAG,"ESP32 CONNECT TO WIFI SUCCESSFULLY");
                 ESP_LOGI(TAG,"SSID:%s  PASSWORD:%s",WIFI_SSID,WIFI_PASSWORD);
-
+                xEventGroupSetBits(s_wifi_ev,EV_WIFI_CONNECTED_BIT);
                 break;
 
             case WIFI_EVENT_STA_DISCONNECTED:   //断开连接
-                timeout ++;
-                if(timeout > 5)
-                {
-                    esp_wifi_connect();
-                    timeout = 0;
-                }else{
-                    ESP_LOGI(TAG,"ESP32 WIFI DISCONNECT TIME:%d",timeout);
-                }
+                ESP_LOGI(TAG,"ESP32 WIFI DISCONNECT TIME:%d",timeout);
+                xEventGroupSetBits(s_wifi_event_group, WIFI_FAIL_BIT);
+                xEventGroupSetBits(s_wifi_ev,EV_WIFI_DISCONNECTED_BIT);
+
                 break;
 
             default:break;
@@ -43,7 +41,8 @@ void wifi_event_handle(void* event_handler_arg,
         {
             case IP_EVENT_STA_GOT_IP:   //获取到路由器分配的IP
                 ESP_LOGI(TAG,"ESP32 GET IP SUCCESSFULLY");
-                xSemaphoreGive(wifi_connect_sem);
+                xEventGroupSetBits(s_wifi_event_group,WIFI_CONNECTED_BIT);
+
             default:break;
 
         }
@@ -83,11 +82,8 @@ void wifi_event_handle(void* event_handler_arg,
 }
 
 /*WIFI初始化*/
-void WIFI_Init(void)
+void WIFI_TASK(void * arg)
 {
-    /*初始化连接信号量*/
-    wifi_connect_sem = xSemaphoreCreateBinary();
-
     /*初始化网卡*/
     ESP_ERROR_CHECK(esp_netif_init());
 
@@ -130,13 +126,31 @@ void WIFI_Init(void)
 
     /*启动WIFI*/
     esp_wifi_start();    
+    while(1)
+    {
+        vTaskDelay(pdMS_TO_TICKS(1000));
+        EventBits_t bits = xEventGroupWaitBits(s_wifi_event_group,WIFI_CONNECTED_BIT | WIFI_FAIL_BIT,pdTRUE,pdFALSE,pdMS_TO_TICKS(5000));
+        if(bits & WIFI_FAIL_BIT)
+        {
+            esp_wifi_connect(); //重连
+        }
+        if(bits & WIFI_CONNECTED_BIT)
+        {
 
+        }
+    }
+    vTaskDelete(NULL);
     /*选择smartconfig版本*/
     // esp_smartconfig_set_type(SC_TYPE_ESPTOUCH_AIRKISS);
 
     // smartconfig_start_config_t smart_config_cfg = SMARTCONFIG_START_CONFIG_DEFAULT();
     // esp_smartconfig_start(&smart_config_cfg);
+}
 
-    xSemaphoreTake(wifi_connect_sem , portMAX_DELAY);
-    mqtt_start();
+void WIFI_TASK_INIT(void)
+{
+    s_wifi_event_group = xEventGroupCreate();
+    xEventGroupSetBits(s_wifi_event_group,WIFI_FAIL_BIT);
+
+    xTaskCreatePinnedToCore(WIFI_TASK, "wifi_manager", 4096, NULL, 1, NULL, tskNO_AFFINITY);
 }

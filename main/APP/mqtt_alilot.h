@@ -11,7 +11,7 @@
 #include "esp_log.h"
 #include "cJSON.h"
 #include <time.h>
-
+#include "WIFI.h"
 /*mqtt服务器端口号*/
 #define ALILOT_PORT   1883
 
@@ -50,8 +50,10 @@ typedef enum
     ALIOT_data_EVENT,     //事件上报
 }ALIOT_TYPE;
 
+
+
 /*设备属性上报主题*/
-#define    Attribute_TOPIC "/"ProductKey"/"ALILOT_DEVICE_NAME"/thing/event/property/post"
+#define    POST_TOPIC "/"ProductKey"/"ALILOT_DEVICE_NAME"/thing/event/property/post"
 
 
 
@@ -63,7 +65,7 @@ typedef struct{
     char *topic;        //主题
 }Alilot_t;
 
-void mqtt_start(void);
+void Alilot_mqtt_start(void);
 
 
 #endif

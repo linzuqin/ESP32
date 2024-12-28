@@ -25,6 +25,12 @@
 #include "nvs_flash.h"
 #include "freertos_demo.h"
 #include "APP/WIFI.h"
+#include "APP/mqtt_alilot.h"
+#include "freertos/task.h"
+#include "freertos/event_groups.h"
+
+EventGroupHandle_t s_wifi_ev;
+
 /**
  * @brief       程序入口
  * @param       无
@@ -41,6 +47,25 @@ void app_main(void)
         ESP_ERROR_CHECK(nvs_flash_erase());
         ret = nvs_flash_init();
     }
-    WIFI_Init();
-    freertos_demo();    /* 运行FreeRTOS例程 */
+    s_wifi_ev = xEventGroupCreate();
+
+    WIFI_TASK_INIT();
+    //freertos_demo();    /* 运行FreeRTOS例程 */
+    while(1)
+    {
+        EventBits_t bits = xEventGroupWaitBits(s_wifi_ev,EV_WIFI_CONNECTED_BIT,pdTRUE,pdFALSE,pdMS_TO_TICKS(5000));
+        if(bits&EV_WIFI_CONNECTED_BIT)
+        {
+            Alilot_mqtt_start();
+            break;
+        }
+        vTaskDelay(pdMS_TO_TICKS(1*1000));
+    }
+
+    while(1)
+    {
+
+        vTaskDelay(pdMS_TO_TICKS(1*1000));
+
+    }
 }
