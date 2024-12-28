@@ -102,28 +102,30 @@ void core_hex2str(uint8_t *input, uint32_t input_len, char *output, uint8_t lowe
 }
 
 /*根据事件类型创建数据结构体*/
-Alilot_t Alilot_Creat_data(ALIOT_TYPE event)
+Alilot_t *Alilot_Creat_data(ALIOT_TYPE event)
 {
-    ALIOT_data_DES* data = (ALIOT_data_DES*)malloc(sizeof(ALIOT_data_DES));
+    Alilot_t* data = (Alilot_t*)malloc(sizeof(Alilot_t));
     if(data)
     {
-        memset(data,0,sizeof(ALIOT_data_DES));
-        data->data_str = cJSON_CreateObject();
+        memset(data,0,sizeof(Alilot_t));
+        data->root = cJSON_CreateObject();
         char id[10];
-        snprintf(id,10,"%lu",data_id++);
-        cJSON_AddStringToObject(data->data_str,"id",id);
-        cJSON_AddStringToObject(data->data_str,"version","1.0");
+        snprintf(id,10,"%d",data_id++);
+        cJSON_AddStringToObject(data->root,"id",id);
+        cJSON_AddStringToObject(data->root,"version","1.0");
+        cJSON* sys_item = cJSON_AddObjectToObject(data->root , "sys");
+        cJSON_AddNumberToObject(sys_item , "ack" , 0);
         switch(event)
         {
             case ALIOT_data_POST:      //常规属性上报
-                cJSON_AddObjectToObject(data->data_str,"params");
-                cJSON_AddStringToObject(data->data_str,"method","thing.event.property.post");
+                cJSON_AddObjectToObject(data->root,"params");
+                cJSON_AddStringToObject(data->root,"method","thing.event.property.post");
                 break;
             case ALIOT_data_SET_ACK:   //属性设置回复
-                cJSON_AddObjectToObject(data->data_str,"data");
+                cJSON_AddObjectToObject(data->root,"data");
                 break;
             case ALIOT_data_EVENT:     //事件上报
-                cJSON_AddObjectToObject(data->data_str,"params");
+                cJSON_AddObjectToObject(data->root,"params");
                 break;
             default:break;
         }
@@ -144,13 +146,13 @@ void Alilot_generate_str(Alilot_t *data)
             cJSON_free(data->data_str);
             data->data_str = NULL;
         }
-        data->data_str = cJSON_PrintUnformatted(data->str);
+        data->data_str = cJSON_PrintUnformatted(data->root);
         data->len = strlen(data->data_str);
     }
 }
 
 /*阿里云数据释放*/
-void Alilot_Free(Alilot_t ^data)
+void Alilot_Free(Alilot_t *data)
 {
     if(data)
     {
@@ -159,10 +161,58 @@ void Alilot_Free(Alilot_t ^data)
             ESP_LOGI(TAG,"data_str free : %s",data->data_str);
             cJSON_free(data->data_str);
         }
-        if(data->str)                   //若还存在根节点
+        if(data->root)                   //若还存在根节点
         {
-            ESP_LOGI(TAG,"str Delet : %s",data->str);
-            cJSON_Delete(data->str);
+            //ESP_LOGI(TAG,"str Delet : %s",data->root);
+            cJSON_Delete(data->root);
+        }
+    }
+}
+
+/*向阿里云数据结构体中添加整形类型数据*/
+void Alilot_Data_Add_int(Alilot_t* data,const char* name, int value)
+{
+    if(data)            //若传入的数据结构体不为空
+    {
+        cJSON* Data_params = cJSON_GetObjectItem(data->root,"params");
+        if(Data_params)         //若成功获取params
+        {
+            cJSON* num_item = cJSON_AddObjectToObject(data->root,name);
+            cJSON_AddNumberToObject(num_item , "value" , value);
+            cJSON_AddNumberToObject(num_item , "time" , time(0)*1000ull);
+
+        }
+    }
+}
+
+/*向阿里云数据结构体中添加字符串类型数据*/
+void Alilot_Data_Add_str(Alilot_t* data,const char* name, const char * value)
+{
+    if(data)            //若传入的数据结构体不为空
+    {
+        cJSON* Data_params = cJSON_GetObjectItem(data->root,"params");
+        if(Data_params)         //若成功获取params
+        {
+            cJSON* str_item = cJSON_AddObjectToObject(data->root,name);
+            cJSON_AddStringToObject(str_item , "value" , value);
+            cJSON_AddNumberToObject(str_item , "time" , time(0)*1000ull);
+
+        }
+    }
+}
+
+/*向阿里云数据结构体中添加浮点类型数据*/
+void Alilot_Data_Add_double(Alilot_t* data,const char* name, double value)
+{
+    if(data)            //若传入的数据结构体不为空
+    {
+        cJSON* Data_params = cJSON_GetObjectItem(data->root,"params");
+        if(Data_params)         //若成功获取params
+        {
+            cJSON* num_item = cJSON_AddObjectToObject(data->root,name);
+            cJSON_AddNumberToObject(num_item , "value" , value);
+            cJSON_AddNumberToObject(num_item , "time" , time(0)*1000ull);
+
         }
     }
 }

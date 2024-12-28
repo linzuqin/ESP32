@@ -40,7 +40,8 @@
     "esp_netif.h": "c",
     "esp_wifi.h": "c",
     "esp_event.h": "c",
-    "md5.h": "c"
+    "md5.h": "c",
+    "cjson.h": "c"
   },
 "idf.openOcdConfigs": [
     "board/esp32s3-builtin.cfg"

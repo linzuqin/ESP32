@@ -10,6 +10,7 @@
 #include "esp_event.h"
 #include "esp_log.h"
 #include "cJSON.h"
+#include <time.h>
 
 /*mqtt服务器端口号*/
 #define ALILOT_PORT   1883
@@ -44,9 +45,9 @@
 /*事件类型*/
 typedef enum
 {
-    ALIOT_DM_POST,      //常规属性上报
-    ALIOT_DM_SET_ACK,   //属性设置回复
-    ALIOT_DM_EVENT,     //事件上报
+    ALIOT_data_POST,      //常规属性上报
+    ALIOT_data_SET_ACK,   //属性设置回复
+    ALIOT_data_EVENT,     //事件上报
 }ALIOT_TYPE;
 
 /*设备属性上报主题*/
@@ -58,7 +59,7 @@ typedef enum
 typedef struct{
     char *data_str;
     int len;
-    cJSON *str;         //根节点
+    cJSON *root;         //根节点
     char *topic;        //主题
 }Alilot_t;
 
