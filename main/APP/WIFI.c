@@ -22,7 +22,7 @@ void wifi_event_handle(void* event_handler_arg,
             case WIFI_EVENT_STA_CONNECTED:  //连接成功
                 ESP_LOGI(TAG,"ESP32 CONNECT TO WIFI SUCCESSFULLY");
                 ESP_LOGI(TAG,"SSID:%s  PASSWORD:%s",WIFI_SSID,WIFI_PASSWORD);
-                xEventGroupSetBits(s_wifi_ev,EV_WIFI_CONNECTED_BIT);
+                //xEventGroupSetBits(s_wifi_ev,EV_WIFI_CONNECTED_BIT);
                 break;
 
             case WIFI_EVENT_STA_DISCONNECTED:   //断开连接
@@ -42,7 +42,7 @@ void wifi_event_handle(void* event_handler_arg,
             case IP_EVENT_STA_GOT_IP:   //获取到路由器分配的IP
                 ESP_LOGI(TAG,"ESP32 GET IP SUCCESSFULLY");
                 xEventGroupSetBits(s_wifi_event_group,WIFI_CONNECTED_BIT);
-
+                xEventGroupSetBits(s_wifi_ev,EV_WIFI_CONNECTED_BIT);
             default:break;
 
         }
