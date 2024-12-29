@@ -50,7 +50,18 @@ typedef enum
     ALIOT_data_EVENT,     //事件上报
 }ALIOT_TYPE;
 
+/*属性参数*/
+typedef struct{
+    char* name;             //属性标识符
+    char* str_value;        //字符串值
+    double double_value;    //浮点值
+    int   int_value;        //整型值
+}Property_t;
 
+/*阿里云物理模型*/
+typedef struct{
+    Property_t Property_1;
+}Alilot_Model_t;
 
 /*设备属性上报主题*/
 #define    POST_TOPIC "/"ProductKey"/"ALILOT_DEVICE_NAME"/thing/event/property/post"

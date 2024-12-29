@@ -295,6 +295,7 @@ void Alilot_mqtt_run(void * arg )
         vTaskDelay(60*1000/portTICK_PERIOD_MS);
     }
 }
+
 void Alilot_mqtt_start(void)
 {
     xTaskCreatePinnedToCore(Alilot_mqtt_run, "aliot_run", 4096, NULL,3, NULL, tskNO_AFFINITY);
