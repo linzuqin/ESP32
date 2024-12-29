@@ -26,8 +26,8 @@ typedef enum {
     WIFI_EV_MAX,
 } wifi_ev_t;
 
-#define WIFI_SSID       "HONGNIUDIANZI"
-#define WIFI_PASSWORD   "15059176224"
+#define WIFI_SSID       "main"
+#define WIFI_PASSWORD   "12345678"
 
 void WIFI_TASK_INIT(void);
 

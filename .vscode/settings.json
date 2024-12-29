@@ -50,7 +50,7 @@
     "board/esp32s3-builtin.cfg"
 ],
 "idf.flashType": "UART",
-"idf.portWin": "COM12",
+"idf.portWin": "COM37",
 "idf.espIdfPathWin": "d:\\ESP-IDF\\CONTAINER_DIRECTORY\\v5.3.2\\esp-idf",
 "idf.toolsPathWin": "d:\\ESP-IDF\\TOOLS"
 }

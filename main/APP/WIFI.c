@@ -26,7 +26,7 @@ void wifi_event_handle(void* event_handler_arg,
                 break;
 
             case WIFI_EVENT_STA_DISCONNECTED:   //断开连接
-                ESP_LOGI(TAG,"ESP32 WIFI DISCONNECT TIME:%d",timeout);
+                ESP_LOGI(TAG,"ESP32 WIFI DISCONNECT TIME:%d",timeout++);
                 xEventGroupSetBits(s_wifi_event_group, WIFI_FAIL_BIT);
                 xEventGroupSetBits(s_wifi_ev,EV_WIFI_DISCONNECTED_BIT);
 

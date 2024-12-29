@@ -27,11 +27,12 @@
 #define MY_UNIT         "c"
 
 /*接口地址*/
-#define MY_URL          "https://api.seniverse.com/v3/weather/now.json?key="Personal_KEY"&location="MY_LOCATION"&language="MY_LANGUAGE"&unit="MY_UNIT
+#define MY_URL          "http://api.seniverse.com/v3/weather/now.json?key=ScPoJ3ivFZQgiSuP1&location=FuJianFuZhou&language=zh-Hans&unit=c"
 
 /*数据最大长度*/
 #define DATA_MAX_LEN    1024
 
+#define REQUEST_INTERVAL 10
 /*位置数据结构体*/
 typedef struct{
     char* id;       //位置ID
@@ -51,11 +52,11 @@ typedef struct{
 
 /*天气数据结构体*/
 typedef struct{
-    char *data;             //数据
+    char data[DATA_MAX_LEN];             //数据
     uint16_t data_len;      //数据长度
     Weather_data_t weather;      //天气数据
     location_t location;         //位置
-    char  last_update_time[25];  //平台数据上一次更新时间
+    char  last_update_time[50];  //平台数据上一次更新时间
 }Weather_t;
 
 /*启动htpp获取天气任务*/
