@@ -1,5 +1,13 @@
 #include "LVGL.h"
 
+/* LV_DEMO_TASK 任务 配置
+ * 包括: 任务优先级 堆栈大小 任务句柄 创建任务
+ */
+#define LV_DEMO_TASK_PRIO   1               /* 任务优先级 */
+#define LV_DEMO_STK_SIZE    5 * 1024        /* 任务堆栈大小 */
+TaskHandle_t LV_DEMOTask_Handler;           /* 任务句柄 */
+void lv_demo_task(void *pvParameters);      /* 任务函数 */
+
 /**
  * @brief       初始化并注册显示设备
  * @param       无
@@ -37,12 +45,12 @@ void lv_port_disp_init(void)
      *      这样，LVGL将始终以 'flush_cb' 的形式提供整个渲染屏幕，您只需更改帧缓冲区的地址。
      */
     /* 使用双缓冲 */
-    buf1 = heap_caps_malloc(ltdcdev.width * 60 * sizeof(lv_color_t), MALLOC_CAP_DMA);
-    buf2 = heap_caps_malloc(ltdcdev.width * 60 * sizeof(lv_color_t), MALLOC_CAP_DMA);
+    buf1 = heap_caps_malloc(SCREEN_MAX_WIDTH * 60 * sizeof(lv_color_t), MALLOC_CAP_DMA);
+    buf2 = heap_caps_malloc(SCREEN_MAX_WIDTH * 60 * sizeof(lv_color_t), MALLOC_CAP_DMA);
 
     /* 初始化显示缓冲区 */
     static lv_disp_draw_buf_t disp_buf;                                 /* 保存显示缓冲区信息的结构体 */
-    lv_disp_draw_buf_init(&disp_buf, buf1, buf2, ltdcdev.width * 60);   /* 初始化显示缓冲区 */
+    lv_disp_draw_buf_init(&disp_buf, buf1, buf2, SCREEN_MAX_WIDTH * 60);   /* 初始化显示缓冲区 */
     
     /* 在LVGL中注册显示设备 */
     static lv_disp_drv_t disp_drv;      /* 显示设备的描述符(HAL要注册的显示驱动程序、与显示交互并处理与图形相关的结构体、回调函数) */
@@ -52,8 +60,8 @@ void lv_port_disp_init(void)
      * 这里为了适配正点原子的多款屏幕，采用了动态获取的方式，
      * 在实际项目中，通常所使用的屏幕大小是固定的，因此可以直接设置为屏幕的大小 
      */
-    disp_drv.hor_res = ltdcdev.width;
-    disp_drv.ver_res = ltdcdev.height;
+    disp_drv.hor_res = SCREEN_MAX_WIDTH;
+    disp_drv.ver_res = SCREEN_MAX_HEIGHT;
 
     /* 用来将缓冲区的内容复制到显示设备 */
     disp_drv.flush_cb = lvgl_disp_flush_cb;
@@ -202,12 +210,32 @@ void lvgl_demo(void)
     ESP_ERROR_CHECK(esp_timer_start_periodic(lvgl_tick_timer, 1 * 1000));
 
     /* 官方demo,需要在SDK Configuration中开启对应Demo */
-    lv_demo_music();      
+    //lv_demo_music();      
     // lv_demo_benchmark();
     // lv_demo_widgets();
     // lv_demo_stress();
     // lv_demo_keypad_encoder();
 
+    /* 创建LVGL任务 */
+    xTaskCreatePinnedToCore((TaskFunction_t )lv_demo_task,          /* 任务函数 */
+                            (const char*    )"lv_demo_task",        /* 任务名称 */
+                            (uint16_t       )LV_DEMO_STK_SIZE,      /* 任务堆栈大小 */
+                            (void*          )NULL,                  /* 传入给任务函数的参数 */
+                            (UBaseType_t    )LV_DEMO_TASK_PRIO,     /* 任务优先级 */
+                            (TaskHandle_t*  )&LV_DEMOTask_Handler,  /* 任务句柄 */
+                            (BaseType_t     ) 0);                   /* 该任务哪个内核运行 */
+}
+
+/*LVGL显示框架*/
+void lv_mainstart(void)
+{
+
+}
+
+/*LVGL运行任务*/
+void lv_demo_task(void *pvParameters)
+{
+    lv_mainstart();
     while (1)
     {
         lv_timer_handler();             /* LVGL计时器 */

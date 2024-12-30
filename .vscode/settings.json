@@ -44,7 +44,8 @@
     "cjson.h": "c",
     "http_weather.h": "c",
     "main.h": "c",
-    "event_groups.h": "c"
+    "event_groups.h": "c",
+    "lvgl_demo.h": "c"
   },
 "idf.openOcdConfigs": [
     "board/esp32s3-builtin.cfg"

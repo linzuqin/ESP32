@@ -7,6 +7,8 @@
 #include "lvgl.h"
 #include "demos/lv_demos.h"
 
+#define SCREEN_MAX_WIDTH    800    
+#define SCREEN_MAX_HEIGHT   480
 
 void lvgl_demo(void);                                                                               /* lvgl_demo入口函数 */
 void lv_port_disp_init(void);                                                                       /* 初始化并注册显示设备 */
