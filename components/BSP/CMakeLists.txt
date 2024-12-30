@@ -1,19 +1,20 @@
 set(src_dirs
-            LED
             IIC
             XL9555
-            SPI
-            LCD)
+            RGBLCD
+            TOUCH)
 
 set(include_dirs
-            LED
             IIC
             XL9555
-            SPI
-            LCD)
+            RGBLCD
+            TOUCH)
 
 set(requires
-            driver)
+            driver
+            esp_lcd
+            esp_common
+            log)
 
 idf_component_register(SRC_DIRS ${src_dirs} INCLUDE_DIRS ${include_dirs} REQUIRES ${requires})
 

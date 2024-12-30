@@ -836,3 +836,10 @@ D:/ESP-IDF/project/demo/WIFI_demo/build/esp-idf/BSP/CMakeFiles/list_install_comp
 D:/ESP-IDF/project/demo/WIFI_demo/build/esp-idf/BSP/CMakeFiles/install.dir
 D:/ESP-IDF/project/demo/WIFI_demo/build/esp-idf/BSP/CMakeFiles/install/local.dir
 D:/ESP-IDF/project/demo/WIFI_demo/build/esp-idf/BSP/CMakeFiles/install/strip.dir
+D:/ESP-IDF/project/demo/WIFI_demo/build/esp-idf/LVGL/CMakeFiles/__idf_LVGL.dir
+D:/ESP-IDF/project/demo/WIFI_demo/build/esp-idf/LVGL/CMakeFiles/edit_cache.dir
+D:/ESP-IDF/project/demo/WIFI_demo/build/esp-idf/LVGL/CMakeFiles/rebuild_cache.dir
+D:/ESP-IDF/project/demo/WIFI_demo/build/esp-idf/LVGL/CMakeFiles/list_install_components.dir
+D:/ESP-IDF/project/demo/WIFI_demo/build/esp-idf/LVGL/CMakeFiles/install.dir
+D:/ESP-IDF/project/demo/WIFI_demo/build/esp-idf/LVGL/CMakeFiles/install/local.dir
+D:/ESP-IDF/project/demo/WIFI_demo/build/esp-idf/LVGL/CMakeFiles/install/strip.dir

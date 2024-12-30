@@ -28,6 +28,11 @@
 #include "freertos/task.h"
 #include "iic.h"
 
+
+/* 引脚与相关参数定义 */
+#define XL9555_INT_IO               GPIO_NUM_40                     /* XL9555_INT引脚 */
+#define XL9555_INT                  gpio_get_level(XL9555_INT_IO)   /* 读取XL9555_INT的电平 */
+
 /* XL9555命令宏 */
 #define XL9555_INPUT_PORT0_REG      0                               /* 输入寄存器0地址 */
 #define XL9555_INPUT_PORT1_REG      1                               /* 输入寄存器1地址 */
