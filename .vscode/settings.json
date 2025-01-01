@@ -45,13 +45,18 @@
     "http_weather.h": "c",
     "main.h": "c",
     "event_groups.h": "c",
-    "lvgl_demo.h": "c"
+    "lvgl_demo.h": "c",
+    "ntp_time.h": "c",
+    "time.h": "c",
+    "esp_sntp.h": "c",
+    "semphr.h": "c",
+    "queue.h": "c"
   },
 "idf.openOcdConfigs": [
     "board/esp32s3-builtin.cfg"
 ],
 "idf.flashType": "UART",
-"idf.portWin": "COM37",
+"idf.portWin": "COM22",
 "idf.espIdfPathWin": "d:\\ESP-IDF\\CONTAINER_DIRECTORY\\v5.3.2\\esp-idf",
 "idf.toolsPathWin": "d:\\ESP-IDF\\TOOLS"
 }

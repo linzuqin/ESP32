@@ -10,6 +10,9 @@
 #include "freertos/semphr.h" 
 #include "APP/mqtt_alilot.h"
 #include "freertos/event_groups.h"
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+
 
 #define EV_WIFI_CONNECTED_BIT           (1<<0)
 #define EV_WIFI_DISCONNECTED_BIT        (1<<1)

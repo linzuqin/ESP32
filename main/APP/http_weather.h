@@ -7,6 +7,11 @@
 #include "esp_log.h"
 #include "freertos/task.h"
 #include "freertos/event_groups.h"
+#include <time.h>
+#include <sys/time.h>
+#include "esp_timer.h"
+#include "nvs_flash.h"
+#include "nvs.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -32,7 +37,10 @@
 /*数据最大长度*/
 #define DATA_MAX_LEN    1024
 
-#define REQUEST_INTERVAL 10
+#define REQUEST_INTERVAL 1
+
+/*天气种类*/
+#define WEATHER_TYPE_NUM    40
 /*位置数据结构体*/
 typedef struct{
     char* id;       //位置ID
@@ -47,6 +55,7 @@ typedef struct{
 typedef struct{
     char* text;     //天气
     char* code;     //天气编号
+    char* details;  //天气编号对应的天气详情
     char* temp;     //温度
 }Weather_data_t;
 

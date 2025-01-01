@@ -2,6 +2,7 @@
 
 static esp_mqtt_client_handle_t mqtt_hanlde;
 static uint16_t data_id = 0;        //每条消息的ID
+extern QueueHandle_t sign ;
 
 #define TAG     "MQTT"
 
@@ -38,6 +39,10 @@ void mqtt_event_callback(void* event_handler_arg,
     {
         case MQTT_EVENT_CONNECTED:      //MQTT连接成功
             ESP_LOGI(TAG,"MQTT CONNECT SUCCESSFULLY");
+            Alilot_post_version(Get_app_version());
+
+            /*订阅主题*/
+            esp_mqtt_client_subscribe_single(mqtt_hanlde,OTA_UPGRADE_TOPIC,1);
             break;
         
         case MQTT_EVENT_DISCONNECTED:   //MQTT断开连接
@@ -127,6 +132,9 @@ static Alilot_t *Alilot_Creat_data(ALIOT_TYPE event)
                 cJSON_AddObjectToObject(data->root,"data");
                 break;
             case ALIOT_data_EVENT:     //事件上报
+                cJSON_AddObjectToObject(data->root,"params");
+                break;
+            case ALILOT_OTA_VERSION:
                 cJSON_AddObjectToObject(data->root,"params");
                 break;
             default:break;
@@ -249,6 +257,43 @@ void Aliot_post_property_str(const char* name,char* value)
     Alilot_Free(data);
 }
 
+/*返回当前版本号*/
+const char* Get_app_version(void)
+{
+    static char app_version[32];
+    if(app_version[0] == 0)
+    {
+        const esp_partition_t *running = esp_ota_get_running_partition();
+        esp_app_desc_t running_desc;
+        esp_ota_get_partition_description(running,&running_desc);
+        memcpy(app_version , running_desc.version,strlen(running_desc.version));
+    }   
+    return app_version;
+}
+
+/*向mqtt数据结构体中添加版本号节点*/
+static void Alilot_Add_ota_version(Alilot_t* data,const char* version)
+{
+    if(data)
+    {
+        cJSON* param = cJSON_GetObjectItem(data->root , "params");
+        if(param)
+        {
+            cJSON_AddStringToObject(param,"version",version);
+        }
+    }
+}
+
+/*向平台上报版本号*/
+void Alilot_post_version(const char* version)
+{
+    Alilot_t *data = Alilot_Creat_data(ALILOT_OTA_VERSION);
+    Alilot_Add_ota_version(data,version);
+    Alilot_generate_str(data);
+    esp_mqtt_client_publish(mqtt_hanlde , OTA_VERSION_TOPIC , data->data_str , data->len,1,0);
+    Alilot_Free(data);
+}
+
 void Alilot_mqtt_run(void * arg )
 {
     /*配置mqtt连接参数*/
@@ -291,7 +336,10 @@ void Alilot_mqtt_run(void * arg )
 
     while(1)
     {
-        
+        xSemaphoreTake(sign, portMAX_DELAY); /* 获取互斥信号量 */
+
+
+        xSemaphoreGive(sign); /* 释放互斥信号量 */
         vTaskDelay(60*1000/portTICK_PERIOD_MS);
     }
 }

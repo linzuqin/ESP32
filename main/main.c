@@ -1,7 +1,9 @@
 
 #include "main.h"
 EventGroupHandle_t s_wifi_ev;
+QueueHandle_t sign ;
 
+#define TAG "main"
 /**
  * @brief       程序入口
  * @param       无
@@ -10,7 +12,8 @@ EventGroupHandle_t s_wifi_ev;
 void app_main(void)
 {
     esp_err_t ret;
-    
+    sign = xSemaphoreCreateMutex();
+
     ret= nvs_flash_init();  /* 初始化NVS */
 
     if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND)
@@ -27,12 +30,8 @@ void app_main(void)
         EventBits_t bits = xEventGroupWaitBits(s_wifi_ev,EV_WIFI_CONNECTED_BIT,pdTRUE,pdFALSE,pdMS_TO_TICKS(5000));
         if(bits&EV_WIFI_CONNECTED_BIT)
         {
-            #if CONNECT_ALILOT
                 Alilot_mqtt_start();
-            #else
-                http_weather_get_start();
-            #endif
-            
+                http_weather_get_start();            
             break;
         }
         vTaskDelay(pdMS_TO_TICKS(1*1000));
@@ -40,6 +39,7 @@ void app_main(void)
 
     while(1)
     {
+        esp_initialize_sntp();
 
         vTaskDelay(pdMS_TO_TICKS(1*1000));
 

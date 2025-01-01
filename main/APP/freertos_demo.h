@@ -21,6 +21,8 @@
 #ifndef __FREERTOS_DEMO_H
 #define __FREERTOS_DEMO_H
 #include "sensor.h"
+#include "http_weather.h"
+#include "mqtt_alilot.h"
 
 void freertos_demo(void);
 

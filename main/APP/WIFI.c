@@ -126,6 +126,8 @@ void WIFI_TASK(void * arg)
 
     /*启动WIFI*/
     esp_wifi_start();    
+
+
     while(1)
     {
         vTaskDelay(pdMS_TO_TICKS(1000));
@@ -134,7 +136,7 @@ void WIFI_TASK(void * arg)
         {
             esp_wifi_connect(); //重连
         }
-        if(bits & WIFI_CONNECTED_BIT)
+        else if(bits & WIFI_CONNECTED_BIT)
         {
 
         }

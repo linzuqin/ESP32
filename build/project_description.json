@@ -1,7 +1,7 @@
 {
     "version":            "1.1",
     "project_name":       "WIFI_DEMO",
-    "project_version":    "8b88658-dirty",
+    "project_version":    "1.0.0",
     "project_path":       "D:/ESP-IDF/project/demo/WIFI_demo",
     "idf_path":           "D:/ESP-IDF/CONTAINER_DIRECTORY/v5.3.2/esp-idf",
     "build_dir":          "D:/ESP-IDF/project/demo/WIFI_demo/build",
@@ -1210,7 +1210,7 @@
             "managed_reqs": [],
             "managed_priv_reqs": [],
             "file": "D:/ESP-IDF/project/demo/WIFI_demo/build/esp-idf/main/libmain.a",
-            "sources": [ "D:/ESP-IDF/project/demo/WIFI_demo/main/main.c", "D:/ESP-IDF/project/demo/WIFI_demo/main/APP/WIFI.c", "D:/ESP-IDF/project/demo/WIFI_demo/main/APP/freertos_demo.c", "D:/ESP-IDF/project/demo/WIFI_demo/main/APP/http_weather.c", "D:/ESP-IDF/project/demo/WIFI_demo/main/APP/mqtt_alilot.c", "D:/ESP-IDF/project/demo/WIFI_demo/main/APP/sensor.c" ],
+            "sources": [ "D:/ESP-IDF/project/demo/WIFI_demo/main/main.c", "D:/ESP-IDF/project/demo/WIFI_demo/main/APP/LVGL.c", "D:/ESP-IDF/project/demo/WIFI_demo/main/APP/WIFI.c", "D:/ESP-IDF/project/demo/WIFI_demo/main/APP/freertos_demo.c", "D:/ESP-IDF/project/demo/WIFI_demo/main/APP/http_weather.c", "D:/ESP-IDF/project/demo/WIFI_demo/main/APP/mqtt_alilot.c", "D:/ESP-IDF/project/demo/WIFI_demo/main/APP/ntp_time.c", "D:/ESP-IDF/project/demo/WIFI_demo/main/APP/sensor.c" ],
             "include_dirs": [ ".", "APP" ]
         },
         "mbedtls": {

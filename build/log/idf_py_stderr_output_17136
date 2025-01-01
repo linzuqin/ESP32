@@ -1,0 +1,23 @@
+CMake Error:
+  Running
+
+   'D:/ESP-IDF/TOOLS/tools/ninja/1.12.1/ninja.exe' '-C' 'D:/ESP-IDF/project/demo/WIFI_demo/build' '-t' 'recompact'
+
+  failed with:
+
+   ninja: error: failed recompaction: Permission denied
+
+
+
+CMake Error:
+  Running
+
+   'D:/ESP-IDF/TOOLS/tools/ninja/1.12.1/ninja.exe' '-C' 'D:/ESP-IDF/project/demo/WIFI_demo/build' '-t' 'restat' 'build.ninja'
+
+  failed with:
+
+   ninja: error: failed recompaction: Permission denied
+
+
+
+CMake Generate step failed.  Build files cannot be regenerated correctly.

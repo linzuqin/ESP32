@@ -12,9 +12,12 @@
 #include "freertos/task.h"
 #include "freertos/event_groups.h"
 #include "APP/http_weather.h"
+#include "APP/ntp_time.h"
+#include "esp_system.h"
+#include "esp_sntp.h"
+#include "freertos/semphr.h"
+#include "freertos/queue.h"
 
-/*是否连接阿里云 若不链接阿里云 则默认http协议连接心知天气获取天气信息*/
-#define CONNECT_ALILOT  1
 
 
 

@@ -12,6 +12,7 @@
 #include "cJSON.h"
 #include <time.h>
 #include "WIFI.h"
+#include "esp_ota_ops.h"
 /*mqtt服务器端口号*/
 #define ALILOT_PORT   1883
 
@@ -48,6 +49,7 @@ typedef enum
     ALIOT_data_POST,      //常规属性上报
     ALIOT_data_SET_ACK,   //属性设置回复
     ALIOT_data_EVENT,     //事件上报
+    ALILOT_OTA_VERSION,   //OTA升级事件
 }ALIOT_TYPE;
 
 /*属性参数*/
@@ -66,7 +68,11 @@ typedef struct{
 /*设备属性上报主题*/
 #define    POST_TOPIC "/"ProductKey"/"ALILOT_DEVICE_NAME"/thing/event/property/post"
 
+/*上报OTA版本信息主题*/
+#define     OTA_VERSION_TOPIC "/ota/device/inform/"ProductKey"/"ALILOT_DEVICE_NAME
 
+/*OTA升级主题*/
+#define     OTA_UPGRADE_TOPIC   "/ota/device/upgrade/"ProductKey"/"ALILOT_DEVICE_NAME
 
 /*上报数据结构体*/
 typedef struct{
@@ -76,6 +82,8 @@ typedef struct{
     char *topic;        //主题
 }Alilot_t;
 
+void Alilot_post_version(const char* version);
+const char* Get_app_version(void);
 void Alilot_mqtt_start(void);
 
 
