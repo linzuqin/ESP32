@@ -557,3 +557,8 @@ if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   include("D:/ESP-IDF/project/demo/WIFI_demo/build/esp-idf/LVGL/cmake_install.cmake")
 endif()
 
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
+  include("D:/ESP-IDF/project/demo/WIFI_demo/build/esp-idf/OTA/cmake_install.cmake")
+endif()
+

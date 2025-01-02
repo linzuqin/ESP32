@@ -50,7 +50,8 @@
     "time.h": "c",
     "esp_sntp.h": "c",
     "semphr.h": "c",
-    "queue.h": "c"
+    "queue.h": "c",
+    "ALILOT_OTA.h":"c"
   },
 "idf.openOcdConfigs": [
     "board/esp32s3-builtin.cfg"

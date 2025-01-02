@@ -153,6 +153,13 @@ D:/ESP-IDF/project/demo/WIFI_demo/build/esp-idf/esp_bootloader_format/CMakeFiles
 D:/ESP-IDF/project/demo/WIFI_demo/build/esp-idf/esp_bootloader_format/CMakeFiles/install/local.dir
 D:/ESP-IDF/project/demo/WIFI_demo/build/esp-idf/esp_bootloader_format/CMakeFiles/install/strip.dir
 D:/ESP-IDF/project/demo/WIFI_demo/build/esp-idf/app_update/CMakeFiles/__idf_app_update.dir
+D:/ESP-IDF/project/demo/WIFI_demo/build/esp-idf/app_update/CMakeFiles/blank_ota_data.dir
+D:/ESP-IDF/project/demo/WIFI_demo/build/esp-idf/app_update/CMakeFiles/read-otadata.dir
+D:/ESP-IDF/project/demo/WIFI_demo/build/esp-idf/app_update/CMakeFiles/read_otadata.dir
+D:/ESP-IDF/project/demo/WIFI_demo/build/esp-idf/app_update/CMakeFiles/erase-otadata.dir
+D:/ESP-IDF/project/demo/WIFI_demo/build/esp-idf/app_update/CMakeFiles/erase_otadata.dir
+D:/ESP-IDF/project/demo/WIFI_demo/build/esp-idf/app_update/CMakeFiles/otadata-flash.dir
+D:/ESP-IDF/project/demo/WIFI_demo/build/esp-idf/app_update/CMakeFiles/encrypted-otadata-flash.dir
 D:/ESP-IDF/project/demo/WIFI_demo/build/esp-idf/app_update/CMakeFiles/edit_cache.dir
 D:/ESP-IDF/project/demo/WIFI_demo/build/esp-idf/app_update/CMakeFiles/rebuild_cache.dir
 D:/ESP-IDF/project/demo/WIFI_demo/build/esp-idf/app_update/CMakeFiles/list_install_components.dir
@@ -843,3 +850,10 @@ D:/ESP-IDF/project/demo/WIFI_demo/build/esp-idf/LVGL/CMakeFiles/list_install_com
 D:/ESP-IDF/project/demo/WIFI_demo/build/esp-idf/LVGL/CMakeFiles/install.dir
 D:/ESP-IDF/project/demo/WIFI_demo/build/esp-idf/LVGL/CMakeFiles/install/local.dir
 D:/ESP-IDF/project/demo/WIFI_demo/build/esp-idf/LVGL/CMakeFiles/install/strip.dir
+D:/ESP-IDF/project/demo/WIFI_demo/build/esp-idf/OTA/CMakeFiles/__idf_OTA.dir
+D:/ESP-IDF/project/demo/WIFI_demo/build/esp-idf/OTA/CMakeFiles/edit_cache.dir
+D:/ESP-IDF/project/demo/WIFI_demo/build/esp-idf/OTA/CMakeFiles/rebuild_cache.dir
+D:/ESP-IDF/project/demo/WIFI_demo/build/esp-idf/OTA/CMakeFiles/list_install_components.dir
+D:/ESP-IDF/project/demo/WIFI_demo/build/esp-idf/OTA/CMakeFiles/install.dir
+D:/ESP-IDF/project/demo/WIFI_demo/build/esp-idf/OTA/CMakeFiles/install/local.dir
+D:/ESP-IDF/project/demo/WIFI_demo/build/esp-idf/OTA/CMakeFiles/install/strip.dir

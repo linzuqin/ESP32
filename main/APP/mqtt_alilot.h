@@ -13,6 +13,9 @@
 #include <time.h>
 #include "WIFI.h"
 #include "esp_ota_ops.h"
+#include "ALILOT_OTA.h"
+#include "esp_http_client.h"
+#include "esp_crt_bundle.h"
 /*mqtt服务器端口号*/
 #define ALILOT_PORT   1883
 
@@ -74,6 +77,8 @@ typedef struct{
 /*OTA升级主题*/
 #define     OTA_UPGRADE_TOPIC   "/ota/device/upgrade/"ProductKey"/"ALILOT_DEVICE_NAME
 
+/*OTA升级进度上报主题*/
+#define     OTA_PROCESS_TOPIC   "/ota/device/progress/"ProductKey"/"ALILOT_DEVICE_NAME
 /*上报数据结构体*/
 typedef struct{
     char *data_str;
@@ -85,6 +90,7 @@ typedef struct{
 void Alilot_post_version(const char* version);
 const char* Get_app_version(void);
 void Alilot_mqtt_start(void);
+const char* Get_app_version(void);
 
 
 #endif

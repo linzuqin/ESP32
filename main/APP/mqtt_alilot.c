@@ -29,6 +29,33 @@ const char* g_aliot_ca = "-----BEGIN CERTIFICATE-----\n"
 "HMUfpIBvFSDJ3gyICh3WZlXi/EjJKSZp4A==\n"
 "-----END CERTIFICATE-----";
 
+void matt_ota_callback(int code)
+{
+    cJSON *root = cJSON_CreateObject();
+    cJSON_AddStringToObject(root , "id" , "OTA_UPDATE");
+    cJSON *params = cJSON_AddObjectToObject(root , "params");
+    char code_str[4];
+    sprintf(code_str,"%d",code);
+    cJSON_AddStringToObject(params,"step",code_str);
+    char desc[128];
+    switch(code)
+    {
+        case -1:memcpy(desc,"升级失败",sizeof("升级失败"));break;
+        case -2:memcpy(desc,"下载失败",sizeof("下载失败"));break;
+        case -3:memcpy(desc,"校验失败",sizeof("校验失败"));break;
+        case -4:memcpy(desc,"烧写失败",sizeof("烧写失败"));break;
+        default:memcpy(desc,"升级成功",sizeof("升级成功"));break;
+    }
+    cJSON_AddStringToObject(params,"desc",desc);
+
+    char * data_str = cJSON_PrintUnformatted(root);
+    ESP_LOGI(TAG,"TOPIC->%s , payload->%s",OTA_PROCESS_TOPIC,data_str);
+    esp_mqtt_client_publish(mqtt_hanlde , OTA_PROCESS_TOPIC , data_str , strlen(data_str) , 1,0);
+
+    cJSON_free(data_str);
+    cJSON_Delete(root);
+}   
+
 void mqtt_event_callback(void* event_handler_arg,
                                     esp_event_base_t event_base,
                                     int32_t event_id,
@@ -60,6 +87,10 @@ void mqtt_event_callback(void* event_handler_arg,
         case MQTT_EVENT_DATA:
             ESP_LOGI(TAG,"TOPIC:%s",data->topic);
             ESP_LOGI(TAG,"DATA: %s",data->data);
+            if(strstr(data->topic , "/property/set"))
+            {
+
+            }
             break;
 
     }
