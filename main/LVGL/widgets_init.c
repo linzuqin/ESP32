@@ -52,7 +52,7 @@ __attribute__((unused)) void ta_event_cb (lv_event_t *e) {
     }
 }
 
-#if LV_USE_ANALOGCLOCK != 1
+#if LV_USE_ANALOGCLOCK != 0
 void clock_count(int *hour, int *min, int *sec)
 {
     (*sec)++;

@@ -27,10 +27,10 @@ typedef enum
 
 /*传感器数据结构体*/
 typedef struct{
-    uint8_t dht11_temp;         //dht11温度
-    uint8_t dht11_humi;         //dht11湿度
-    uint8_t internal_temp;      //内部温度
-    uint8_t internal_humi;      //内部湿度
+    double dht11_temp;         //dht11温度
+    double dht11_humi;         //dht11湿度
+    double internal_temp;      //内部温度
+    double internal_humi;      //内部湿度
 }sensor_t;
 /* IO操作 */
 #define DHT11_DQ_IN     gpio_get_level(DHT11_DQ_GPIO_PIN)   /* 数据端口输入 */
@@ -45,7 +45,7 @@ typedef struct{
 void dht11_reset(void);                                 /* 复位DHT11 */
 uint8_t dht11_init(void);                               /* 初始化DHT11 */
 uint8_t dht11_check(void);                              /* 等待DHT11的回应 */
-uint8_t dht11_read_data(uint8_t *temp,uint8_t *humi);   /* 读取温湿度 */
+uint8_t dht11_read_data(double *temp, double *humi);   /* 读取温湿度 */
 
 
 #endif

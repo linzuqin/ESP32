@@ -13,8 +13,7 @@
 #include "events_init.h"
 #include "widgets_init.h"
 #include "custom.h"
-#include "lv_dclock.h"
-#include "lv_analogclock.h"
+
 
 
 int login_time_min_value = 34;

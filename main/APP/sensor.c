@@ -140,9 +140,9 @@ static uint8_t dht11_read_byte(void)
  * @retval      0, 正常.
  *              1, 失败
  */
-uint8_t dht11_read_data(uint8_t *temp, uint8_t *humi)
+uint8_t dht11_read_data(double *temp, double *humi)
 {
-    uint8_t buf[5];
+    double buf[5];
     uint8_t i;
 
     dht11_reset();
@@ -156,8 +156,8 @@ uint8_t dht11_read_data(uint8_t *temp, uint8_t *humi)
 
         if ((buf[0] + buf[1] + buf[2] + buf[3]) == buf[4])
         {
-            *humi = buf[0];
-            *temp = buf[2];
+            *humi = buf[0]+ buf[1]/10;
+            *temp = buf[2]+ buf[3]/10;
         }
     }
     else

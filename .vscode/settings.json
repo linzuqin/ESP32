@@ -54,7 +54,6 @@
     "ALILOT_OTA.h": "c",
     "gui_guider.h": "c",
     "lv_demos.h": "c",
-    "MYLVGL.h": "c",
     "events_init.h": "c",
     "custom.h": "c",
     "LVGL_NXP.h": "c",

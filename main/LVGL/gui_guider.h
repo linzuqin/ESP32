@@ -14,8 +14,7 @@ extern "C" {
 #endif
 
 #include "lvgl.h"
-#include "lv_dclock.h"
-#include "lv_analogclock.h"
+
 typedef struct
 {
   
@@ -222,6 +221,8 @@ LV_FONT_DECLARE(lv_font_SourceHanSerifSC_Regular_22)
 LV_FONT_DECLARE(lv_font_montserratMedium_22)
 LV_FONT_DECLARE(lv_font_SourceHanSerifSC_Regular_18)
 
+extern lv_obj_t* lv_temp;
+extern lv_obj_t* lv_humi;
 
 #ifdef __cplusplus
 }
