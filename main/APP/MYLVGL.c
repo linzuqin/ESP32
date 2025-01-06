@@ -174,7 +174,7 @@ static void touchpad_get_xy(lv_coord_t *x, lv_coord_t *y)
  * @param       data        : 输入设备数据结构体
  * @retval      无
  */
-void touchpad_read(lv_indev_drv_t *indev_drv, lv_indev_data_t *data)
+void IRAM_ATTR touchpad_read(lv_indev_drv_t *indev_drv, lv_indev_data_t *data)
 {
     static lv_coord_t last_x = 0;
     static lv_coord_t last_y = 0;
@@ -194,8 +194,6 @@ void touchpad_read(lv_indev_drv_t *indev_drv, lv_indev_data_t *data)
     data->point.x = last_x;
     data->point.y = last_y;
 }
-
-
 
 
 

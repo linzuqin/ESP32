@@ -2,14 +2,22 @@ idf_component_register(
     SRC_DIRS 
         "."
         "APP"
-
-
+        "LVGL"
+        "LVGL/guider_customer_fonts"
+        "LVGL/guider_fonts"
+        "LVGL/images"
+        "LVGL/custom"
+        "LVGL/dclock"
+        "LVGL/analogclock"
     INCLUDE_DIRS 
         "."
         "APP"
-
-
-
-
+        "LVGL"
+        "LVGL/guider_customer_fonts"
+        "LVGL/guider_fonts"
+        "LVGL/images"
+        "LVGL/custom"
+        "LVGL/dclock"
+        "LVGL/analogclock"
 )
 
