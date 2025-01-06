@@ -3,6 +3,7 @@
 static esp_mqtt_client_handle_t mqtt_hanlde;
 static uint16_t data_id = 0;        //每条消息的ID
 extern QueueHandle_t sign ;
+static Alilot_Model_t   Alilot_Model[Alilot_Model_NUM];
 
 #define TAG     "MQTT"
 
@@ -67,7 +68,7 @@ void mqtt_event_callback(void* event_handler_arg,
         case MQTT_EVENT_CONNECTED:      //MQTT连接成功
             ESP_LOGI(TAG,"MQTT CONNECT SUCCESSFULLY");
             Alilot_post_version(Get_app_version());
-
+            esp_ota_mark_app_valid_cancel_rollback();
             /*订阅主题*/
             esp_mqtt_client_subscribe_single(mqtt_hanlde,OTA_UPGRADE_TOPIC,1);
             break;
@@ -87,8 +88,59 @@ void mqtt_event_callback(void* event_handler_arg,
         case MQTT_EVENT_DATA:
             ESP_LOGI(TAG,"TOPIC:%s",data->topic);
             ESP_LOGI(TAG,"DATA: %s",data->data);
-            if(strstr(data->topic , "/property/set"))
+            if(strstr(data->topic , SET_TOPIC) != NULL)
             {
+                cJSON* Property_js = cJSON_Parse(data->data);
+                cJSON* Params_js = cJSON_GetObjectItem(Property_js , "params");
+                cJSON* ID = cJSON_GetObjectItem(Property_js , "id");
+                cJSON* version = cJSON_GetObjectItem(Property_js , "version");
+               
+                if(Params_js)
+                {
+                    cJSON* root = Params_js->child;
+                    while(root)
+                    {
+                        for(int i=0;i<Alilot_Model_NUM;i++)
+                        {
+                            if(root->string == Alilot_Model[i].name)
+                            {
+                                switch(root->type)
+                                {
+                                    case cJSON_Number:
+                                        Alilot_Model[i].double_value = root->valuedouble;
+                                        Alilot_Model[i].int_value = root->valueint;
+                                        break;
+                                    case cJSON_String:
+                                        Alilot_Model[i].str_value = root->valuestring;
+                                        break;
+                                    default:
+                                        ESP_LOGI(TAG,"数据类型未知");
+                                        break;
+                                }
+                            }
+                        }
+                    
+                        root = root->next;
+                    }
+                    ALILOT_mqtt_set_ack(200,"success",ID->valuestring , version->valuestring);
+                }
+                cJSON_Delete(Property_js);
+            }
+
+            else if((strstr(data->topic , OTA_UPGRADE_TOPIC)!=NULL) || (strstr(data->topic,ALILOT_OTA_GET_REPLY_TOPIC)!=NULL))
+            {
+                cJSON* params_js = cJSON_Parse(data->data);
+                cJSON* data_js = cJSON_GetObjectItem(params_js,"data");
+                cJSON* url_js = cJSON_GetObjectItem(data_js,"url");
+                alilot_ota_config(url_js->valuestring,matt_ota_callback);
+                esp_err_t result = alilot_ota_start();
+                if(result == ESP_OK)
+                {
+                    ESP_LOGI(TAG,"OTA升级启动成功");
+                }else{
+                    ESP_LOGI(TAG,"OTA升级启动失败");
+                }
+                cJSON_Delete(params_js);
 
             }
             break;
@@ -96,6 +148,7 @@ void mqtt_event_callback(void* event_handler_arg,
     }
 }
 
+/*获取服务器ID*/
 char * get_clientid(void)
 {
     uint8_t mac[8];
@@ -288,6 +341,24 @@ void Aliot_post_property_str(const char* name,char* value)
     Alilot_Free(data);
 }
 
+/*服务器属性设置应答*/
+void ALILOT_mqtt_set_ack(int code , char *message , char* id , char *version)
+{
+    // cJSON* root = cJSON_CreateObject();
+    // cJSON_AddNumberToObject(root,"code",code);
+    // cJSON_AddObjectToObject(root,"data");
+    // cJSON_AddStringToObject(root,"ID",id);
+    // cJSON_AddStringToObject(root,"message",message);
+    // cJSON_AddStringToObject(root,"version",version);
+    Alilot_t *data = Alilot_Creat_data(ALIOT_data_SET_ACK);
+    Alilot_Data_Add_int(data,"code",code);
+    Alilot_Data_Add_str(data,"message",message);
+    Alilot_Data_Add_str(data,"version",version);
+    Alilot_generate_str(data);
+    esp_mqtt_client_publish(mqtt_hanlde , SET_REPLY_TOPIC , data->data_str , data->len,1,0);
+    Alilot_Free(data);
+}
+
 /*返回当前版本号*/
 const char* Get_app_version(void)
 {
@@ -322,6 +393,16 @@ void Alilot_post_version(const char* version)
     Alilot_Add_ota_version(data,version);
     Alilot_generate_str(data);
     esp_mqtt_client_publish(mqtt_hanlde , OTA_VERSION_TOPIC , data->data_str , data->len,1,0);
+    Alilot_Free(data);
+}
+
+/*向平台获取OTA升级*/
+void ALILOT_OTA_GET(void)
+{
+    Alilot_t*data = Alilot_Creat_data(ALILOT_OTA_VERSION);
+    cJSON_AddStringToObject(data->root,"method","thing.ota.firmware.get");
+    Alilot_generate_str(data);
+    esp_mqtt_client_publish(mqtt_hanlde , ALILOT_OTA_GET_TOPIC , data->data_str , data->len,1,0);
     Alilot_Free(data);
 }
 

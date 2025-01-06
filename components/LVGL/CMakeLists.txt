@@ -15,3 +15,4 @@ elseif(MICROPY_DIR)
 else()
   include(${CMAKE_CURRENT_LIST_DIR}/env_support/cmake/custom.cmake)
 endif()
+

@@ -46,6 +46,41 @@
 /*mqtt服务器网址*/
 #define MQTT_URL        "mqtts://iot-06z00d9wc4x18a6.mqtt.iothub.aliyuncs.com"
 
+/*设备属性上报主题*/
+#define    POST_TOPIC "/"ProductKey"/"ALILOT_DEVICE_NAME"/thing/event/property/post"
+
+/*设备属性下发主题*/
+#define    SET_TOPIC    "/sys/"ProductKey"/"ALILOT_DEVICE_NAME"/thing/service/property/set"
+
+/*设备属性下发应答*/
+#define    SET_REPLY_TOPIC  "/sys/"ProductKey"/"ALILOT_DEVICE_NAME"/thing/service/property/set_reply"
+
+/*上报OTA版本信息主题*/
+#define     OTA_VERSION_TOPIC "/ota/device/inform/"ProductKey"/"ALILOT_DEVICE_NAME
+
+/*OTA升级主题*/
+#define     OTA_UPGRADE_TOPIC   "/ota/device/upgrade/"ProductKey"/"ALILOT_DEVICE_NAME
+
+/*OTA升级进度上报主题*/
+#define     OTA_PROCESS_TOPIC   "/ota/device/progress/"ProductKey"/"ALILOT_DEVICE_NAME
+
+/*请求OTA升级*/
+#define     ALILOT_OTA_GET_TOPIC      "/sys/"ProductKey"/"ALILOT_DEVICE_NAME"/thing/ota/firmware/get"
+
+/*请求OTA升级应答主题*/
+#define     ALILOT_OTA_GET_REPLY_TOPIC    "/sys/"ProductKey"/"ALILOT_DEVICE_NAME"/thing/ota/firmware/get_reply"
+
+/*阿里云物理模型数量*/
+#define Alilot_Model_NUM    10
+
+/*上报数据结构体*/
+typedef struct{
+    char *data_str;
+    int len;
+    cJSON *root;         //根节点
+    char *topic;        //主题
+}Alilot_t;
+
 /*事件类型*/
 typedef enum
 {
@@ -65,32 +100,17 @@ typedef struct{
 
 /*阿里云物理模型*/
 typedef struct{
-    Property_t Property_1;
+    char* name;             //属性标识符
+    char* str_value;        //字符串值
+    double double_value;    //浮点值
+    int   int_value;        //整型值
 }Alilot_Model_t;
-
-/*设备属性上报主题*/
-#define    POST_TOPIC "/"ProductKey"/"ALILOT_DEVICE_NAME"/thing/event/property/post"
-
-/*上报OTA版本信息主题*/
-#define     OTA_VERSION_TOPIC "/ota/device/inform/"ProductKey"/"ALILOT_DEVICE_NAME
-
-/*OTA升级主题*/
-#define     OTA_UPGRADE_TOPIC   "/ota/device/upgrade/"ProductKey"/"ALILOT_DEVICE_NAME
-
-/*OTA升级进度上报主题*/
-#define     OTA_PROCESS_TOPIC   "/ota/device/progress/"ProductKey"/"ALILOT_DEVICE_NAME
-/*上报数据结构体*/
-typedef struct{
-    char *data_str;
-    int len;
-    cJSON *root;         //根节点
-    char *topic;        //主题
-}Alilot_t;
 
 void Alilot_post_version(const char* version);
 const char* Get_app_version(void);
 void Alilot_mqtt_start(void);
 const char* Get_app_version(void);
+void ALILOT_mqtt_set_ack(int code , char *message , char* id , char *version);
 
 
 #endif

@@ -17,8 +17,14 @@
 #include "esp_sntp.h"
 #include "freertos/semphr.h"
 #include "freertos/queue.h"
+#include "APP/sensor.h"
 
-
+typedef struct{
+    uint8_t lv_disp_init_flag;          //显示设备初始化完成标志位
+    uint8_t lv_indev_init_falg;         //输入设备初始化完成标志位
+    uint8_t dht11_init_flag;            //dht11初始化完成标志位
+    uint8_t WIFI_init_falg;             //WIFI初始化完成标志位
+}init_t;
 
 
 

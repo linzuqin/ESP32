@@ -155,5 +155,5 @@ void http_weathe_task( void * arg )
 
 void http_weather_get_start(void)
 {
-    xTaskCreatePinnedToCore(http_weathe_task, "http_run", 8192*2, NULL,3, NULL, tskNO_AFFINITY);
+    xTaskCreatePinnedToCore(http_weathe_task, "http_run", 8192, NULL,3, NULL, tskNO_AFFINITY);
 }

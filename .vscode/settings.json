@@ -51,13 +51,20 @@
     "esp_sntp.h": "c",
     "semphr.h": "c",
     "queue.h": "c",
-    "ALILOT_OTA.h":"c"
+    "ALILOT_OTA.h": "c",
+    "gui_guider.h": "c",
+    "lv_demos.h": "c",
+    "MYLVGL.h": "c",
+    "events_init.h": "c",
+    "custom.h": "c",
+    "LVGL_NXP.h": "c",
+    "lvgl.h": "c"
   },
 "idf.openOcdConfigs": [
     "board/esp32s3-builtin.cfg"
 ],
 "idf.flashType": "UART",
-"idf.portWin": "COM22",
+"idf.portWin": "COM44",
 "idf.espIdfPathWin": "d:\\ESP-IDF\\CONTAINER_DIRECTORY\\v5.3.2\\esp-idf",
 "idf.toolsPathWin": "d:\\ESP-IDF\\TOOLS"
 }

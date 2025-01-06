@@ -25,6 +25,13 @@ typedef enum
     DHT11_PIN_SET
 }DHT11_GPIO_PinState;
 
+/*传感器数据结构体*/
+typedef struct{
+    uint8_t dht11_temp;         //dht11温度
+    uint8_t dht11_humi;         //dht11湿度
+    uint8_t internal_temp;      //内部温度
+    uint8_t internal_humi;      //内部湿度
+}sensor_t;
 /* IO操作 */
 #define DHT11_DQ_IN     gpio_get_level(DHT11_DQ_GPIO_PIN)   /* 数据端口输入 */
 

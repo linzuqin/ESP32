@@ -62,11 +62,11 @@ extern "C" {
 #include "src/draw/lv_draw.h"
 
 #include "src/lv_api_map.h"
-
 /*-----------------
  * EXTRAS
  *----------------*/
 #include "src/extra/lv_extra.h"
+#include "../../main/APP/LVGL_NXP.h"
 
 /*********************
  *      DEFINES
