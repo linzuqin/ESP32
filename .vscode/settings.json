@@ -64,7 +64,9 @@
     "lv_font.h": "c",
     "lv_symbol_def.h": "c",
     "lv_txt.h": "c",
-    "lv_draw.h": "c"
+    "lv_draw.h": "c",
+    "lv_printf.h": "c",
+    "lv_math.h": "c"
   },
 "idf.openOcdConfigs": [
     "board/esp32s3-builtin.cfg"

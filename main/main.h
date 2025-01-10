@@ -18,6 +18,7 @@
 #include "freertos/semphr.h"
 #include "freertos/queue.h"
 #include "APP/sensor.h"
+#include "LVGL/lvgl_ui.h"
 
 typedef struct{
     uint8_t lv_disp_init_flag;          //显示设备初始化完成标志位

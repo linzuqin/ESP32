@@ -39,6 +39,9 @@ void app_main(void)
     /*WIFI连接初始化*/
     WIFI_TASK_INIT();
     //freertos_demo();    /* 运行FreeRTOS例程 */
+
+    /*LVGL初始化*/
+    LVGL_TASK_START();
     while(1)
     {
         EventBits_t bits = xEventGroupWaitBits(s_wifi_ev,EV_WIFI_CONNECTED_BIT,pdTRUE,pdFALSE,pdMS_TO_TICKS(5000));

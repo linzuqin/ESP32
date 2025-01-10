@@ -20,8 +20,8 @@ extern "C" {
  *      INCLUDES
  *********************/
 #include "lv_conf_internal.h"
-
-#if LV_USE_DCLOCK != 1
+#define LV_USE_DCLOCK 1
+#if LV_USE_DCLOCK != 0
 
 #include <stdarg.h>
 #include <stdlib.h>

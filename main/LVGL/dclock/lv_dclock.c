@@ -14,17 +14,20 @@
  *********************/
 #include "lv_dclock.h"
 #if LV_USE_DCLOCK != 0
-#include "../../../core/lv_obj.h"
-#include "../../../misc/lv_assert.h"
-#include "../../../core/lv_group.h"
-#include "../../../draw/lv_draw.h"
-#include "../../../misc/lv_color.h"
-#include "../../../misc/lv_math.h"
-#include "../../../misc/lv_bidi.h"
-#include "../../../misc/lv_txt_ap.h"
-#include "../../../misc/lv_printf.h"
-#include "../../../widgets/lv_label.h"
-
+#include "../../../managed_components/lvgl__lvgl/src/misc/lv_assert.h"
+#include "../../../managed_components/lvgl__lvgl/src/core/lv_group.h"
+#include "../../../managed_components/lvgl__lvgl/src/misc/lv_color.h"
+#include "../../../managed_components/lvgl__lvgl/src/misc/lv_math.h"
+#include "../../../managed_components/lvgl__lvgl/src/misc/lv_bidi.h"
+#include "../../../managed_components/lvgl__lvgl/src/misc/lv_txt_ap.h"
+#include "../../../managed_components/lvgl__lvgl/src/misc/lv_printf.h"
+#include "../../../managed_components/lvgl__lvgl/src/widgets/lv_label.h"
+#include "../../../managed_components/lvgl__lvgl/src/core/lv_obj.h"
+#include "../../../managed_components/lvgl__lvgl/src/font/lv_font.h"
+#include "../../../managed_components/lvgl__lvgl/src/font/lv_symbol_def.h"
+#include "../../../managed_components/lvgl__lvgl/src/misc/lv_txt.h"
+#include "../../../managed_components/lvgl__lvgl/src/draw/lv_draw.h"
+#include "esp_mac.h"
 
 /*********************
  *      DEFINES

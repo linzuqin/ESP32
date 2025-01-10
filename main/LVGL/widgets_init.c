@@ -11,7 +11,7 @@
 #include "gui_guider.h"
 #include "widgets_init.h"
 #include <stdlib.h>
-
+#include "esp_mac.h"
 
 __attribute__((unused)) void kb_event_cb (lv_event_t *e) {
     lv_event_code_t code = lv_event_get_code(e);

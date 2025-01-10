@@ -21,6 +21,6 @@ void lv_port_disp_init(void);                                                   
 void lv_port_indev_init(void);                                                                      /* 初始化并注册输入设备 */
 void touchpad_read(lv_indev_drv_t *indev_drv, lv_indev_data_t *data);                               /* 图形库的触摸屏读取回调函数 */
 
-void LVGL_TASK_INIT(void);
+void LVGL_TASK_START(void);
 
 #endif

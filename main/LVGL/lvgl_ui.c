@@ -1,7 +1,7 @@
 #include "lvgl_ui.h"
 
 /*lvgl句柄*/
-lv_ui* my_ui;
+lv_ui guider_ui;
 
 /*温湿度数据*/
 extern sensor_t my_sensor_data;
@@ -221,7 +221,7 @@ void lv_demo_task(void *pvParameters)
     ESP_ERROR_CHECK(esp_timer_start_periodic(lvgl_tick_timer, 1 * 1000));
 
     lv_task_handler();             /* LVGL计时器 */
-    setup_ui(my_ui);
+    setup_ui(&guider_ui);
     while (1)
     {
         lv_task_handler();             /* LVGL计时器 */
@@ -230,7 +230,7 @@ void lv_demo_task(void *pvParameters)
     }
 }
 
-void LVGL_TASK_INIT(void)
+void LVGL_TASK_START(void)
 {
     xTaskCreatePinnedToCore(lv_demo_task, "lv_demo_task", 8192, NULL, 1, NULL, tskNO_AFFINITY);
 }

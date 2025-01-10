@@ -15,8 +15,8 @@ extern "C" {
 
 #include "lvgl.h"
 #include "gui_guider.h"
-#include "lv_dclock.h"
-#include "lv_analogclock.h"
+#include "analogclock/lv_analogclock.h"
+#include "dclock/lv_dclock.h"
 __attribute__((unused)) void kb_event_cb(lv_event_t *e);
 __attribute__((unused)) void ta_event_cb(lv_event_t *e);
 #if LV_USE_ANALOGCLOCK != 0
