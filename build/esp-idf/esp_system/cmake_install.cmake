@@ -2,7 +2,7 @@
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "C:/Program Files (x86)/03_lvgl_add_mouse_project")
+  set(CMAKE_INSTALL_PREFIX "C:/Program Files (x86)/WIFI_DEMO")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -39,6 +39,6 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/Users/19044/Desktop/03_lvgl_add_mouse/build/esp-idf/esp_system/port/cmake_install.cmake")
+  include("D:/ESP-IDF/project/demo/wifi_demo/build/esp-idf/esp_system/port/cmake_install.cmake")
 endif()
 

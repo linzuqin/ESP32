@@ -10,18 +10,18 @@ if(NOT EXISTS "D:/ESP-IDF/CONTAINER_DIRECTORY/v5.3.2/esp-idf/components/bootload
   file(MAKE_DIRECTORY "D:/ESP-IDF/CONTAINER_DIRECTORY/v5.3.2/esp-idf/components/bootloader/subproject")
 endif()
 file(MAKE_DIRECTORY
-  "C:/Users/19044/Desktop/03_lvgl_add_mouse/build/bootloader"
-  "C:/Users/19044/Desktop/03_lvgl_add_mouse/build/bootloader-prefix"
-  "C:/Users/19044/Desktop/03_lvgl_add_mouse/build/bootloader-prefix/tmp"
-  "C:/Users/19044/Desktop/03_lvgl_add_mouse/build/bootloader-prefix/src/bootloader-stamp"
-  "C:/Users/19044/Desktop/03_lvgl_add_mouse/build/bootloader-prefix/src"
-  "C:/Users/19044/Desktop/03_lvgl_add_mouse/build/bootloader-prefix/src/bootloader-stamp"
+  "D:/ESP-IDF/project/demo/wifi_demo/build/bootloader"
+  "D:/ESP-IDF/project/demo/wifi_demo/build/bootloader-prefix"
+  "D:/ESP-IDF/project/demo/wifi_demo/build/bootloader-prefix/tmp"
+  "D:/ESP-IDF/project/demo/wifi_demo/build/bootloader-prefix/src/bootloader-stamp"
+  "D:/ESP-IDF/project/demo/wifi_demo/build/bootloader-prefix/src"
+  "D:/ESP-IDF/project/demo/wifi_demo/build/bootloader-prefix/src/bootloader-stamp"
 )
 
 set(configSubDirs )
 foreach(subDir IN LISTS configSubDirs)
-    file(MAKE_DIRECTORY "C:/Users/19044/Desktop/03_lvgl_add_mouse/build/bootloader-prefix/src/bootloader-stamp/${subDir}")
+    file(MAKE_DIRECTORY "D:/ESP-IDF/project/demo/wifi_demo/build/bootloader-prefix/src/bootloader-stamp/${subDir}")
 endforeach()
 if(cfgdir)
-  file(MAKE_DIRECTORY "C:/Users/19044/Desktop/03_lvgl_add_mouse/build/bootloader-prefix/src/bootloader-stamp${cfgdir}") # cfgdir has leading slash
+  file(MAKE_DIRECTORY "D:/ESP-IDF/project/demo/wifi_demo/build/bootloader-prefix/src/bootloader-stamp${cfgdir}") # cfgdir has leading slash
 endif()

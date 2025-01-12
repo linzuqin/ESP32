@@ -2,34 +2,34 @@
 	"sources" : 
 	[
 		{
-			"file" : "C:/Users/19044/Desktop/03_lvgl_add_mouse/build/CMakeFiles/bootloader"
+			"file" : "D:/ESP-IDF/project/demo/wifi_demo/build/CMakeFiles/bootloader"
 		},
 		{
-			"file" : "C:/Users/19044/Desktop/03_lvgl_add_mouse/build/CMakeFiles/bootloader.rule"
+			"file" : "D:/ESP-IDF/project/demo/wifi_demo/build/CMakeFiles/bootloader.rule"
 		},
 		{
-			"file" : "C:/Users/19044/Desktop/03_lvgl_add_mouse/build/CMakeFiles/bootloader-complete.rule"
+			"file" : "D:/ESP-IDF/project/demo/wifi_demo/build/CMakeFiles/bootloader-complete.rule"
 		},
 		{
-			"file" : "C:/Users/19044/Desktop/03_lvgl_add_mouse/build/bootloader-prefix/src/bootloader-stamp/bootloader-build.rule"
+			"file" : "D:/ESP-IDF/project/demo/wifi_demo/build/bootloader-prefix/src/bootloader-stamp/bootloader-build.rule"
 		},
 		{
-			"file" : "C:/Users/19044/Desktop/03_lvgl_add_mouse/build/bootloader-prefix/src/bootloader-stamp/bootloader-configure.rule"
+			"file" : "D:/ESP-IDF/project/demo/wifi_demo/build/bootloader-prefix/src/bootloader-stamp/bootloader-configure.rule"
 		},
 		{
-			"file" : "C:/Users/19044/Desktop/03_lvgl_add_mouse/build/bootloader-prefix/src/bootloader-stamp/bootloader-download.rule"
+			"file" : "D:/ESP-IDF/project/demo/wifi_demo/build/bootloader-prefix/src/bootloader-stamp/bootloader-download.rule"
 		},
 		{
-			"file" : "C:/Users/19044/Desktop/03_lvgl_add_mouse/build/bootloader-prefix/src/bootloader-stamp/bootloader-install.rule"
+			"file" : "D:/ESP-IDF/project/demo/wifi_demo/build/bootloader-prefix/src/bootloader-stamp/bootloader-install.rule"
 		},
 		{
-			"file" : "C:/Users/19044/Desktop/03_lvgl_add_mouse/build/bootloader-prefix/src/bootloader-stamp/bootloader-mkdir.rule"
+			"file" : "D:/ESP-IDF/project/demo/wifi_demo/build/bootloader-prefix/src/bootloader-stamp/bootloader-mkdir.rule"
 		},
 		{
-			"file" : "C:/Users/19044/Desktop/03_lvgl_add_mouse/build/bootloader-prefix/src/bootloader-stamp/bootloader-patch.rule"
+			"file" : "D:/ESP-IDF/project/demo/wifi_demo/build/bootloader-prefix/src/bootloader-stamp/bootloader-patch.rule"
 		},
 		{
-			"file" : "C:/Users/19044/Desktop/03_lvgl_add_mouse/build/bootloader-prefix/src/bootloader-stamp/bootloader-update.rule"
+			"file" : "D:/ESP-IDF/project/demo/wifi_demo/build/bootloader-prefix/src/bootloader-stamp/bootloader-update.rule"
 		}
 	],
 	"target" : 
