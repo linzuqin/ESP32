@@ -27,6 +27,7 @@ void lv_port_disp_init(void)
     void *buf2 = NULL;
 
     /* 初始化显示设备RGBLCD */
+
     ltdc_init();                /* RGB屏初始化 */
     ltdc_display_dir(1);        /* 设置横屏 */
 
@@ -208,24 +209,25 @@ static void Set_Sensor_Value(void)
 void lv_demo_task(void *pvParameters)
 {
     lv_init();              /* 初始化LVGL图形库 */
+
     lv_port_disp_init();    /* lvgl显示接口初始化,放在lv_init()的后面 */
     lv_port_indev_init();   /* lvgl输入接口初始化,放在lv_init()的后面 */
 
-    /* 为LVGL提供时基单元 */
-    const esp_timer_create_args_t lvgl_tick_timer_args = {
-        .callback = &increase_lvgl_tick,
-        .name = "lvgl_tick"
-    };
-    esp_timer_handle_t lvgl_tick_timer = NULL;
-    ESP_ERROR_CHECK(esp_timer_create(&lvgl_tick_timer_args, &lvgl_tick_timer));
-    ESP_ERROR_CHECK(esp_timer_start_periodic(lvgl_tick_timer, 1 * 1000));
+    // /* 为LVGL提供时基单元 */
+    // const esp_timer_create_args_t lvgl_tick_timer_args = {
+    //     .callback = &increase_lvgl_tick,
+    //     .name = "lvgl_tick"
+    // };
+    // esp_timer_handle_t lvgl_tick_timer = NULL;
+    // ESP_ERROR_CHECK(esp_timer_create(&lvgl_tick_timer_args, &lvgl_tick_timer));
+    // ESP_ERROR_CHECK(esp_timer_start_periodic(lvgl_tick_timer, 1 * 1000));
 
-    lv_task_handler();             /* LVGL计时器 */
-    setup_ui(&guider_ui);
+    // lv_task_handler();             /* LVGL计时器 */
+    // setup_ui(&guider_ui);
     while (1)
     {
-        lv_task_handler();             /* LVGL计时器 */
-        Set_Sensor_Value();
+        // lv_task_handler();             /* LVGL计时器 */
+        // Set_Sensor_Value();
         vTaskDelay(pdMS_TO_TICKS(10));  /* 延时10毫秒 */
     }
 }

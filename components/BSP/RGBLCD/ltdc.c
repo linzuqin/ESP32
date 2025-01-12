@@ -246,7 +246,7 @@ void ltdc_draw_point(uint16_t x, uint16_t y, uint16_t color)
 void ltdc_color_fill(uint16_t sx, uint16_t sy, uint16_t ex, uint16_t ey, uint16_t color)
 {
     /* 确保坐标在LCD范围内 */
-    if ( ex > ltdcdev.width || ey > ltdcdev.height)
+    if (sx < 0 || sy < 0 || ex > ltdcdev.width || ey > ltdcdev.height)
     {
         return; /* 坐标超出LCD范围，不执行填充 */
     }  

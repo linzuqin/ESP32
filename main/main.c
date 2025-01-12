@@ -4,6 +4,8 @@ EventGroupHandle_t s_wifi_ev;
 QueueHandle_t sign ;
 init_t device_init;
 sensor_t my_sensor_data;
+i2c_obj_t i2c0_master;
+
 #define TAG "main"
 /**
  * @brief       程序入口
@@ -13,35 +15,26 @@ sensor_t my_sensor_data;
 void app_main(void)
 {
     esp_err_t ret;
-    sign = xSemaphoreCreateMutex();
-
-    ret= nvs_flash_init();  /* 初始化NVS */
+    
+    ret = nvs_flash_init();             /* 初始化NVS */
 
     if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND)
     {
         ESP_ERROR_CHECK(nvs_flash_erase());
         ret = nvs_flash_init();
     }
-    ESP_LOGI(TAG,"ESP CURRENTI VERSION:%s",Get_app_version());
+
+    i2c0_master = iic_init(I2C_NUM_0);  /* 初始化IIC0 */
+    xl9555_init(i2c0_master);           /* IO扩展芯片初始化 */
+
     s_wifi_ev = xEventGroupCreate();
-
-    /*DHT11初始化*/
-    ret = dht11_init();
-    if(ret != 0)
-    {
-        ESP_LOGE(TAG,"DHT11 INIT FAIL");
-        device_init.dht11_init_flag = 0;
-    }else{
-        ESP_LOGI(TAG,"DHT11 INIT FINISH");
-        device_init.dht11_init_flag = 1;
-    }
-
+    sign = xSemaphoreCreateMutex();
     /*WIFI连接初始化*/
     WIFI_TASK_INIT();
-    //freertos_demo();    /* 运行FreeRTOS例程 */
 
     /*LVGL初始化*/
     LVGL_TASK_START();
+    
     while(1)
     {
         EventBits_t bits = xEventGroupWaitBits(s_wifi_ev,EV_WIFI_CONNECTED_BIT,pdTRUE,pdFALSE,pdMS_TO_TICKS(5000));
@@ -59,7 +52,7 @@ void app_main(void)
         esp_initialize_sntp();
         if(device_init.dht11_init_flag == 1)
         {
-            dht11_read_data(&my_sensor_data.dht11_temp,&my_sensor_data.dht11_humi);
+            //dht11_read_data(&my_sensor_data.dht11_temp,&my_sensor_data.dht11_humi);
         }
         vTaskDelay(pdMS_TO_TICKS(1*1000));
 

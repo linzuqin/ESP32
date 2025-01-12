@@ -6,6 +6,7 @@
 #include "esp_timer.h"
 #include "lvgl.h"
 #include "demos/lv_demos.h"
+#include "iic.h"
 
 #include "freertos/event_groups.h"
 #include "freertos/FreeRTOS.h"

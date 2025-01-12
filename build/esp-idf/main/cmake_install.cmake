@@ -1,8 +1,8 @@
-# Install script for directory: D:/ESP-IDF/project/demo/WIFI_demo/main
+# Install script for directory: C:/Users/19044/Desktop/03_lvgl_add_mouse/main
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "C:/Program Files (x86)/WIFI_DEMO")
+  set(CMAKE_INSTALL_PREFIX "C:/Program Files (x86)/03_lvgl_add_mouse_project")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 

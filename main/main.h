@@ -19,7 +19,8 @@
 #include "freertos/queue.h"
 #include "APP/sensor.h"
 #include "LVGL/lvgl_ui.h"
-
+#include "iic.h"
+#include "ltdc.h"
 typedef struct{
     uint8_t lv_disp_init_flag;          //显示设备初始化完成标志位
     uint8_t lv_indev_init_falg;         //输入设备初始化完成标志位

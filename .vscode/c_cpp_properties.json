@@ -21,7 +21,6 @@
                 "limitSymbolsToIncludedHeaders": false
             },
             "configurationProvider": "ms-vscode.cmake-tools"  /* 解决 browse.path 中未找到包含文件 */
-//            "compileCommands": "${workspaceFolder}/build/compile_commands.json"
         }
     ],
     "version": 4
