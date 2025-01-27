@@ -25,11 +25,25 @@
     "lv_mainstart.h": "c",
     "esp_timer.h": "c",
     "complex": "c",
-    "iic.h": "c"
+    "lv_demo_widgets.h": "c",
+    "lv_demo_stress.h": "c",
+    "lv_demo_benchmark.h": "c",
+    "lv_demo_keypad_encoder.h": "c",
+    "lv_demo_music.h": "c",
+    "xl9555.h": "c",
+    "string": "c",
+    "nvs_flash.h": "c",
+    "events_init.h": "c",
+    "gui_guider.h": "c",
+    "lv_assert.h": "c",
+    "lv_label.h": "c",
+    "lv_obj.h": "c",
+    "esp_mac.h": "c",
+    "lv_draw.h": "c"
 },
 "idf.openOcdConfigs": [
     "board/esp32s3-builtin.cfg"
 ],
 "idf.flashType": "UART",
-"idf.portWin": "COM22"
+"idf.portWin": "COM50"
 }

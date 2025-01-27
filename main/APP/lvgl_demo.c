@@ -4,7 +4,7 @@
  * @author      正点原子团队(ALIENTEK)
  * @version     V1.0
  * @date        2023-12-01
- * @brief       LVGL V8添加鼠标 实验
+ * @brief       LVGL V8移植 实验
  * @license     Copyright (c) 2020-2032, 广州市星翼电子科技有限公司
  ****************************************************************************************************
  * @attention
@@ -24,9 +24,19 @@
 #include "esp_timer.h"
 #include "lvgl.h"
 #include "demos/lv_demos.h"
+#include "../generated/gui_guider.h"
+#include "../generated/events_init.h"
 
+void lvgl_task(void * params)
+{
+    while (1)
+    {
+        lv_timer_handler();             /* LVGL计时器 */
+        vTaskDelay(pdMS_TO_TICKS(10));  /* 延时10毫秒 */
+    }
+}
 
-/** 
+/**
  * @brief       lvgl_demo入口函数
  * @param       无
  * @retval      无
@@ -47,13 +57,13 @@ void lvgl_demo(void)
     ESP_ERROR_CHECK(esp_timer_start_periodic(lvgl_tick_timer, 1 * 1000));
 
     /* 官方demo,需要在SDK Configuration中开启对应Demo */
-    //lv_demo_stress();
+	setup_ui(&guider_ui);
+   	events_init(&guider_ui);
 
-    while (1)
-    {
-        lv_timer_handler();             /* LVGL计时器 */
-        vTaskDelay(pdMS_TO_TICKS(10));  /* 延时10毫秒 */
-    }
+	lv_task_handler();
+
+    xTaskCreatePinnedToCore(lvgl_task, "lvgl_task", 4096, NULL,3, NULL, tskNO_AFFINITY);
+
 }
 
 /**
@@ -130,44 +140,22 @@ void lv_port_disp_init(void)
  */
 void lv_port_indev_init(void)
 {
-    // /* 初始化触摸屏 */
-    // tp_dev.init();
+    /* 初始化触摸屏 */
+    tp_dev.init();
 
-    // /* 初始化输入设备 */
-    // static lv_indev_drv_t indev_drv;
-    // lv_indev_drv_init(&indev_drv);
-
-    // /* 配置输入设备类型 */
-    // indev_drv.type = LV_INDEV_TYPE_POINTER;
-
-    // /* 设置输入设备读取回调函数 */
-    // indev_drv.read_cb = touchpad_read;
-
-    // /* 在LVGL中注册驱动程序，并保存创建的输入设备对象 */
-    // lv_indev_t * indev_touchpad;
-    // indev_touchpad = lv_indev_drv_register(&indev_drv);
-
-    /* 初始化鼠标(如果有) */
-    mouse_init();
-
-    /* 注册鼠标输入设备 */
+    /* 初始化输入设备 */
     static lv_indev_drv_t indev_drv;
     lv_indev_drv_init(&indev_drv);
-    
+
     /* 配置输入设备类型 */
     indev_drv.type = LV_INDEV_TYPE_POINTER;
 
     /* 设置输入设备读取回调函数 */
-    indev_drv.read_cb = mouse_read;
+    indev_drv.read_cb = touchpad_read;
 
     /* 在LVGL中注册驱动程序，并保存创建的输入设备对象 */
-    lv_indev_t * indev_mouse;       
-    indev_mouse = lv_indev_drv_register(&indev_drv);
-
-    /* 设置光标，为了简单起见，现在设置为一个 HOME 符号 */
-    lv_obj_t * mouse_cursor = lv_img_create(lv_scr_act());
-    lv_img_set_src(mouse_cursor, LV_SYMBOL_HOME);
-    lv_indev_set_cursor(indev_mouse, mouse_cursor);
+    lv_indev_t *indev_touchpad;
+    indev_touchpad = lv_indev_drv_register(&indev_drv);
 }
 
 /**
@@ -181,10 +169,10 @@ void lv_port_indev_init(void)
 */
 static void lvgl_disp_flush_cb(lv_disp_drv_t *drv, const lv_area_t *area, lv_color_t *color_map)
 {
-    esp_lcd_panel_handle_t panel_handle = (esp_lcd_panel_handle_t) drv->user_data;
+    esp_lcd_panel_handle_t panel_handle = (esp_lcd_panel_handle_t)drv->user_data;
 
     /* 特定区域打点 */
-	esp_lcd_panel_draw_bitmap(panel_handle, area->x1, area->y1, area->x2 + 1, area->y2 + 1, color_map);
+    esp_lcd_panel_draw_bitmap(panel_handle, area->x1, area->y1, area->x2 + 1, area->y2 + 1, color_map);
 
     /* 重要!!! 通知图形库，已经刷新完毕了 */
     lv_disp_flush_ready(drv);
@@ -201,121 +189,59 @@ static void increase_lvgl_tick(void *arg)
     lv_tick_inc(1);
 }
 
-// /**
-//  * @brief       获取触摸屏设备的状态
-//  * @param       无
-//  * @retval      返回触摸屏设备是否被按下
-//  */
-// static bool touchpad_is_pressed(void)
-// {
-//     tp_dev.scan(0);
-
-//     if (tp_dev.sta & TP_PRES_DOWN)
-//     {
-//         return true;
-//     }
-
-//     return false;
-// }
-
-
-// /**
-//  * @brief       在触摸屏被按下的时候读取 x、y 坐标
-//  * @param       x   : x坐标的指针
-//  *   @arg       y   : y坐标的指针
-//  * @retval      无
-//  */
-// static void touchpad_get_xy(lv_coord_t *x, lv_coord_t *y)
-// {
-//     (*x) = tp_dev.x[0];
-//     (*y) = tp_dev.y[0];
-// }
-
-// /**
-//  * @brief       图形库的触摸屏读取回调函数
-//  * @param       indev_drv   : 触摸屏设备
-//  *   @arg       data        : 输入设备数据结构体
-//  * @retval      无
-//  */
-// void touchpad_read(lv_indev_drv_t *indev_drv, lv_indev_data_t* data)
-// {
-//     static lv_coord_t last_x = 0;
-//     static lv_coord_t last_y = 0;
-
-//     /* 保存按下的坐标和状态 */
-//     if(touchpad_is_pressed())
-//     {
-//         touchpad_get_xy(&last_x, &last_y);  /* 在触摸屏被按下的时候读取 x、y 坐标 */
-//         data->state = LV_INDEV_STATE_PR;
-//     } 
-//     else
-//     {
-//         data->state = LV_INDEV_STATE_REL;
-//     }
-
-//     /* 设置最后按下的坐标 */
-//     data->point.x = last_x;
-//     data->point.y = last_y;
-// }
-
 /**
- * @brief       初始化鼠标
+ * @brief       获取触摸屏设备的状态
  * @param       无
- * @retval      无
+ * @retval      返回触摸屏设备是否被按下
  */
-void mouse_init(void)
+static bool touchpad_is_pressed(void)
 {
-    tp_dev.init();
-}
+    tp_dev.scan(0);     /* 触摸按键扫描 */
 
-/**
- * @brief       获取鼠标设备是否被按下
- * @param       无
- * @retval      返回鼠标设备是否被按下
- */
-static bool mouse_is_pressed(void)
-{
-    tp_dev.scan(0);
-    
     if (tp_dev.sta & TP_PRES_DOWN)
     {
         return true;
     }
-    
+
     return false;
 }
 
+
 /**
- * @brief       当鼠标被按下时，获取鼠标的 x、y 坐标
+ * @brief       在触摸屏被按下的时候读取 x、y 坐标
  * @param       x   : x坐标的指针
- *   @arg       y   : y坐标的指针
+ * @param       y   : y坐标的指针
  * @retval      无
  */
-static void mouse_get_xy(lv_coord_t *x, lv_coord_t *y)
+static void touchpad_get_xy(lv_coord_t *x, lv_coord_t *y)
 {
     (*x) = tp_dev.x[0];
     (*y) = tp_dev.y[0];
 }
 
 /**
- * @brief       图形库的鼠标读取回调函数
- * @param       indev_drv   : 鼠标设备
- *   @arg       data        : 输入设备数据结构体
+ * @brief       图形库的触摸屏读取回调函数
+ * @param       indev_drv   : 触摸屏设备
+ * @param       data        : 输入设备数据结构体
  * @retval      无
  */
-void mouse_read(lv_indev_drv_t *indev_drv, lv_indev_data_t *data)
+void touchpad_read(lv_indev_drv_t *indev_drv, lv_indev_data_t *data)
 {
-    /* 获取当前的 x、y 坐标 */
-    mouse_get_xy(&data->point.x, &data->point.y);
+    static lv_coord_t last_x = 0;
+    static lv_coord_t last_y = 0;
 
-    /* 获取是否按下或释放鼠标按钮 */
-    if(mouse_is_pressed()) 
+    /* 保存按下的坐标和状态 */
+    if(touchpad_is_pressed())
     {
+        touchpad_get_xy(&last_x, &last_y);  /* 在触摸屏被按下的时候读取 x、y 坐标 */
         data->state = LV_INDEV_STATE_PR;
     } 
-    else 
+    else
     {
         data->state = LV_INDEV_STATE_REL;
     }
-}
 
+    /* 设置最后按下的坐标 */
+    data->point.x = last_x;
+    data->point.y = last_y;
+}

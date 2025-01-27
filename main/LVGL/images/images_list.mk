@@ -1,1 +1,0 @@
-GEN_CSRCS += _right_jiantou_117x102.c _weather_alpha_90x80.c _camera_alpha_90x80.c _control_alpha_90x80.c _music_alpha_90x80.c _sleep_alpha_50x50.c _temp_alpha_47x45.c _humi_alpha_47x45.c _back_alpha_50x50.c

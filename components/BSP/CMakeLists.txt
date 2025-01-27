@@ -1,13 +1,11 @@
 set(src_dirs
             IIC
-            LED
             XL9555
             RGBLCD
             TOUCH)
 
 set(include_dirs
             IIC
-            LED
             XL9555
             RGBLCD
             TOUCH)
