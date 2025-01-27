@@ -64,9 +64,10 @@ void app_main(void)
         EventBits_t bits = xEventGroupWaitBits(s_wifi_ev,EV_WIFI_CONNECTED_BIT,pdTRUE,pdFALSE,pdMS_TO_TICKS(5000));
         if(bits&EV_WIFI_CONNECTED_BIT)
         {
-                //Alilot_mqtt_start();
-                http_weather_get_start();    
-                ESP_LOGI("main","finish");   
+            //Alilot_mqtt_start();
+            http_weather_get_start();   
+            ntp_task_start();
+            ESP_LOGI("main","finish");   
             break;
         }
         vTaskDelay(pdMS_TO_TICKS(1*10));
@@ -74,7 +75,6 @@ void app_main(void)
 
     while(1)
     {
-        esp_initialize_sntp();
         if(device_init.dht11_init_flag == 1)
         {
             //dht11_read_data(&my_sensor_data.dht11_temp,&my_sensor_data.dht11_humi);

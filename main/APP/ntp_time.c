@@ -10,14 +10,14 @@ void esp_initialize_sntp(void)
     esp_sntp_setservername(1, "ntp.aliyun.com");
     esp_sntp_setservername(2, "210.72.145.44");     // 国家授时中心服务器 IP 地址
 
-    setenv("TZ", "CST-8", 1);                   //东八区
-    tzset();
     esp_sntp_init();                                //初始化
         // //延时等待SNTP初始化完成
     do {
         vTaskDelay(100 / portTICK_PERIOD_MS);
     } while (sntp_get_sync_status() == SNTP_SYNC_STATUS_RESET);
-    esp_sntp_stop();
+
+    setenv("TZ", "CST-8", 1);                   //东八区
+    tzset();
 
 }
 

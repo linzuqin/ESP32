@@ -5,7 +5,6 @@ uint8_t Get_Weather_Flag = 0;
 /*http连接任务句柄*/
 esp_http_client_handle_t esp_http_client_handle;
 Weather_t Weather_data;
-static struct tm timeinfo;
 extern QueueHandle_t sign ;
 
 char *weather_details[WEATHER_TYPE_NUM] = {"晴(国内白天)","晴(国内夜晚)","晴(国外白天)","晴(国外夜晚)","多云","晴间多云(白天)","晴间多云(夜晚)",
@@ -16,6 +15,8 @@ char *weather_details[WEATHER_TYPE_NUM] = {"晴(国内白天)","晴(国内夜晚
 /*打印解析出来的天气信息*/
 void weather_data_LOGI(Weather_t data)
 {
+    struct tm timeinfo;
+
     ESP_LOGI(TAG,"**********location*********");
     ESP_LOGI(TAG,"id:%s",data.location.id);
     ESP_LOGI(TAG,"name:%s",data.location.name);

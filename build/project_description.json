@@ -1,7 +1,7 @@
 {
     "version":            "1.1",
     "project_name":       "01_lvgl_transplant_project",
-    "project_version":    "0d31df5-dirty",
+    "project_version":    "6c83881-dirty",
     "project_path":       "D:/project/ESP-project/project/demo/wifi_demo",
     "idf_path":           "D:/project/ESP-project/CONTAINER_DIRECTORY/v5.3.2/esp-idf",
     "build_dir":          "D:/project/ESP-project/project/demo/wifi_demo/build",
