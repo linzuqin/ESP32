@@ -1,7 +1,7 @@
 {
     "version":            "1.1",
     "project_name":       "WIFI_DEMO",
-    "project_version":    "1.0.3",
+    "project_version":    "1.0.0",
     "project_path":       "D:/project/ESP-project/project/demo/wifi_demo",
     "idf_path":           "D:/project/ESP-project/CONTAINER_DIRECTORY/v5.3.2/esp-idf",
     "build_dir":          "D:/project/ESP-project/project/demo/wifi_demo/build",

@@ -49,12 +49,11 @@ esp_err_t _http_event_handler(esp_http_client_event_t *evt) {
 /*打印解析出来的天气信息*/
 void weather_data_LOGI(Weather_t data)
 {
-    ESP_LOGI(TAG,"**********location*********");
+    ESP_LOGI(TAG,"**********location**********");
     ESP_LOGI(TAG,"name:%s",data.location.name);
     ESP_LOGI(TAG,"country:%s",data.location.country);
     ESP_LOGI(TAG,"path:%s",data.location.path);
-    ESP_LOGI(TAG,"**********now*********");
-    ESP_LOGI(TAG,"text:%s",data.weather.text);
+    ESP_LOGI(TAG,"************DATA************");
     ESP_LOGI(TAG,"details:%s",data.weather.details);
     ESP_LOGI(TAG,"temperature:%s",data.weather.temp);
 }

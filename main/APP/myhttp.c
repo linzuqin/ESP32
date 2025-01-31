@@ -1,9 +1,9 @@
 #include "myhttp.h"
 #define TAG     "MyHttp"
-static http_data_t http_data;
-static esp_http_client_handle_t http_client_handle;
+static http_data_t http_data = {0};
+static esp_http_client_handle_t http_client_handle = NULL;
 
-static esp_err_t _http_event_handle(esp_http_client_event_t *evt)
+static esp_err_t http_event_handle(esp_http_client_event_t *evt)
 {
     switch(evt->event_id) {
         case HTTP_EVENT_ERROR:
@@ -26,25 +26,27 @@ static esp_err_t _http_event_handle(esp_http_client_event_t *evt)
                 if(http_data.token_ack_flag == 0)
                 {
                     cJSON* result_js = cJSON_Parse((char*)evt->data);
-                    cJSON* code_js = cJSON_GetObjectItem(result_js , "code");
-                    if(code_js != NULL)
-                    {
-                        http_data.result_code = code_js->valueint;
-                    }
-                    if(http_data.result_code == 0)
-                    {
-                        cJSON* info_js = cJSON_GetObjectItem(result_js , "info");
-                        if(info_js != NULL)
+                    if (result_js != NULL) {
+                        cJSON* code_js = cJSON_GetObjectItem(result_js , "code");
+                        if(code_js != NULL)
                         {
-                            cJSON* token_js = cJSON_GetObjectItem(info_js , "token");
-                            if(token_js != NULL)
+                            http_data.result_code = code_js->valueint;
+                        }
+                        if(http_data.result_code == 0)
+                        {
+                            cJSON* info_js = cJSON_GetObjectItem(result_js , "info");
+                            if(info_js != NULL)
                             {
-                                http_data.token = token_js->valuestring;
-                                http_data.token_ack_flag = 1;
+                                cJSON* token_js = cJSON_GetObjectItem(info_js , "token");
+                                if(token_js != NULL && token_js->valuestring != NULL)
+                                {
+                                    http_data.token = token_js->valuestring;
+                                    http_data.token_ack_flag = 1;
+                                }
                             }
                         }
+                        cJSON_Delete(result_js);
                     }
-                    cJSON_Delete(result_js);
                 }
             }
  
@@ -94,7 +96,14 @@ static void core_hex2str(uint8_t *input, uint32_t input_len, char *output, uint8
     output[j] = 0;
 }
 
-/*获取服务器ID*/
+/**
+ * @brief Get the client ID based on the device's MAC address.
+ *
+ * This function retrieves the MAC address of the device, formats it as a string,
+ * and returns it as the client ID.
+ *
+ * @return A pointer to the client ID string.
+ */
 static char * get_clientid(void)
 {
     uint8_t mac[8];
@@ -105,6 +114,20 @@ static char * get_clientid(void)
     return client_id;
 }
 
+/**
+ * @brief This function retrieves a token from the server.
+ * 
+ * Steps:
+ * 1. Create and initialize the HTTP client configuration structure.
+ * 2. Initialize the HTTP client handle.
+ * 3. Set the HTTP headers for the request.
+ * 4. Create the JSON body for the request.
+ * 5. Add the current timestamp, product key, device name, and client ID to the JSON body.
+ * 6. Calculate the HMAC-MD5 signature and add it to the JSON body.
+ * 7. Set the JSON body as the POST field for the HTTP client.
+ * 8. Perform the HTTP POST request.
+ * 9. Log the HTTP response status and content length.
+ */
 static void Myhttp_Get_token(void)
 {
     /*step1：创建结构体 并初始化参数*/
@@ -113,6 +136,7 @@ static void Myhttp_Get_token(void)
         .url = "/auth",
         .host = HTTP_URL,
         .user_data = http_data.rx,
+        .event_handler = http_event_handle,
     };
     http_data.token_ack_flag = 0;
     /*step2:初始化句柄*/
@@ -170,13 +194,30 @@ static void Myhttp_Get_token(void)
 
 static void myhttp_task(void *params)
 {
-    while(http_data.result_code == 0)
+    uint8_t attemp = 0;
+    uint8_t attemp_max_num = 10;
+    while(http_data.result_code == 0 && attemp <= attemp_max_num)
     {
         Myhttp_Get_token();
+        attemp ++;
         vTaskDelay(pdMS_TO_TICKS(1*1000));
+    }
+
+    if(attemp > attemp_max_num)
+    {
+        ESP_LOGE(TAG,"TOKEN GET FAIL");
     }
 }
 
+/**
+ * @brief Starts the HTTP task.
+ *
+ * This function creates and starts a FreeRTOS task that runs the `myhttp_task` function.
+ * The task is pinned to no specific core and has a stack size of 1024 bytes.
+ *
+ * @param None
+ * @return None
+ */
 void My_http_start(void)
 {
     xTaskCreatePinnedToCore(myhttp_task, "myhttp_run", 1024, NULL,3, NULL, tskNO_AFFINITY);
