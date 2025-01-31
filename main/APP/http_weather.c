@@ -11,33 +11,52 @@ char *weather_details[WEATHER_TYPE_NUM] = {"晴(国内白天)","晴(国内夜晚
                             "大部多云(白天)","大部多云(夜晚)","阴","阵雨","雷阵雨","雷阵雨伴有冰雹","小雨","中雨","大雨","暴雨",
                             "大暴雨","特大暴雨","冻雨","雨夹雪","阵雪","小雪","中雪","大雪","暴雪","浮尘","扬沙","沙尘暴","强沙尘暴",
                             "雾","霾","风","大风","飓风","热带风暴","龙卷风","龙卷风","冷","热"};
+static void cJSON_Weather_data_parse(char *data);
+
+esp_err_t _http_event_handler(esp_http_client_event_t *evt) {
+    switch(evt->event_id) {
+        case HTTP_EVENT_ERROR:
+            ESP_LOGI(TAG, "HTTP_EVENT_ERROR");
+            break;
+        case HTTP_EVENT_ON_CONNECTED:
+            ESP_LOGI(TAG, "HTTP_EVENT_ON_CONNECTED");
+            break;
+        case HTTP_EVENT_HEADER_SENT:
+            ESP_LOGI(TAG, "HTTP_EVENT_HEADER_SENT");
+            break;
+        case HTTP_EVENT_ON_HEADER:
+            ESP_LOGI(TAG, "HTTP_EVENT_ON_HEADER, key=%s, value=%s", evt->header_key, evt->header_value);
+            break;
+        case HTTP_EVENT_ON_DATA:
+            ESP_LOGI(TAG, "HTTP_EVENT_ON_DATA, len=%d", evt->data_len);
+            if (!esp_http_client_is_chunked_response(evt->client)) {
+                //printf("%.*s", evt->data_len, (char*)evt->data);
+                cJSON_Weather_data_parse((char*)evt->data);
+            }
+            break;
+        case HTTP_EVENT_ON_FINISH:
+            ESP_LOGI(TAG, "HTTP_EVENT_ON_FINISH");
+            break;
+        case HTTP_EVENT_DISCONNECTED:
+            ESP_LOGI(TAG, "HTTP_EVENT_DISCONNECTED");
+            break;
+        default:
+            break;
+    }
+    return ESP_OK;
+}
 
 /*打印解析出来的天气信息*/
 void weather_data_LOGI(Weather_t data)
 {
-    struct tm timeinfo;
-
     ESP_LOGI(TAG,"**********location*********");
-    ESP_LOGI(TAG,"id:%s",data.location.id);
     ESP_LOGI(TAG,"name:%s",data.location.name);
     ESP_LOGI(TAG,"country:%s",data.location.country);
     ESP_LOGI(TAG,"path:%s",data.location.path);
-    ESP_LOGI(TAG,"timezone:%s",data.location.timezone);
-    ESP_LOGI(TAG,"timezone_offset:%s",data.location.timezone_offset);
     ESP_LOGI(TAG,"**********now*********");
     ESP_LOGI(TAG,"text:%s",data.weather.text);
-    ESP_LOGI(TAG,"code:%s",data.weather.code);
     ESP_LOGI(TAG,"details:%s",data.weather.details);
     ESP_LOGI(TAG,"temperature:%s",data.weather.temp);
-    ESP_LOGI(TAG,"last_update:%s",data.last_update_time);
-    time_t t=0;
-    time(&t);                 // 获取网络时间, 64bit的秒计数     
-    localtime_r(&t, &timeinfo);       // 转换成具体的时间参数
-        // ESP_LOGI(TAG, "%4d-%02d-%02d %02d:%02d:%02d week:%d", timeinfo.tm_year + 1900, timeinfo.tm_mon + 1, 
-        // timeinfo.tm_mday, timeinfo.tm_hour, timeinfo.tm_min, timeinfo.tm_sec, timeinfo.tm_wday); 
-    ESP_LOGI(TAG,"NOW_TIME:%4d-%02d-%02d %02d:%02d:%02d week:%d", timeinfo.tm_year + 1900, timeinfo.tm_mon + 1, 
-        timeinfo.tm_mday, timeinfo.tm_hour, timeinfo.tm_min, timeinfo.tm_sec, timeinfo.tm_wday);
-
 }
 
 /*天气数据解析*/
@@ -47,7 +66,7 @@ static void cJSON_Weather_data_parse(char *data)
 
     if(weather_data == NULL)
     {
-        ESP_LOGI(TAG,"weather_data error");
+        //ESP_LOGI(TAG,"weather_data error");
         goto __fail_exit;
     }
 
@@ -55,7 +74,7 @@ static void cJSON_Weather_data_parse(char *data)
     cJSON *result_arr = cJSON_GetObjectItem(weather_data , "results");
     if(result_arr == NULL)
     {
-        ESP_LOGI(TAG,"can't find result_arr");
+        //ESP_LOGI(TAG,"can't find result_arr");
         goto __fail_exit;
     }
 
@@ -63,7 +82,7 @@ static void cJSON_Weather_data_parse(char *data)
     cJSON* result = cJSON_GetArrayItem(result_arr,0);
     if(result == NULL)
     {
-        ESP_LOGI(TAG,"can't find result");
+        //ESP_LOGI(TAG,"can't find result");
         goto __fail_exit;
     }
     
@@ -129,7 +148,6 @@ static void http_get_weather(void)
         ESP_LOGI(TAG, "HTTP GET Status = %d, content_length = %lld",
         esp_http_client_get_status_code(esp_http_client_handle),     //获取响应状态信息
         esp_http_client_get_content_length(esp_http_client_handle)); //获取响应信息长度
-        //ESP_LOGI(TAG,"%s", Weather_data.data);
         cJSON_Weather_data_parse(Weather_data.data);
         esp_http_client_close(esp_http_client_handle);  // 断开连接
         memset(&Weather_data.data, 0, sizeof(Weather_data.data));
@@ -142,28 +160,45 @@ static void http_get_weather(void)
 /*http任务*/
 void http_weathe_task( void * arg )
 { 
-    /*设置http连接参数*/
-    esp_http_client_config_t http_client_cfg = {
-        .url = MY_URL,
-    };
-
-    /*设置http句柄参数*/
-    esp_http_client_handle = esp_http_client_init(&http_client_cfg);
-
-    /*发送GET请求*/
-    esp_http_client_set_method(esp_http_client_handle , HTTP_METHOD_GET);
-    http_get_weather();
     while(1)
     {
-        xSemaphoreTake(sign, portMAX_DELAY); /* 获取互斥信号量 */
+        /*设置http连接参数*/
+        esp_http_client_config_t http_client_cfg = {
+            .url = MY_URL,
+            .event_handler = _http_event_handler,
+        };
 
-        http_get_weather();
-       
-        xSemaphoreGive(sign); /* 释放互斥信号量 */
+        /*设置http句柄参数*/
+        esp_http_client_handle = esp_http_client_init(&http_client_cfg);
+
+        esp_err_t err = esp_http_client_perform(esp_http_client_handle);
+        if (err == ESP_OK) {
+            ESP_LOGI(TAG, "HTTP GET Status = %d, content_length = %lld",
+                    esp_http_client_get_status_code(esp_http_client_handle),
+                    esp_http_client_get_content_length(esp_http_client_handle));
+        } else {
+            ESP_LOGE(TAG, "HTTP GET request failed: %s", esp_err_to_name(err));
+        }
+
+        esp_http_client_cleanup(esp_http_client_handle); 
+        vTaskDelay(60000 / portTICK_PERIOD_MS); // Delay for 1 minute
+
     }
+   
+    // /*发送GET请求*/
+    // esp_http_client_set_method(esp_http_client_handle , HTTP_METHOD_GET);
+    // http_get_weather();
+    // while(1)
+    // {
+    //     xSemaphoreTake(sign, portMAX_DELAY); /* 获取互斥信号量 */
+
+    //     http_get_weather();
+       
+    //     xSemaphoreGive(sign); /* 释放互斥信号量 */
+    // }
 }
 
 void http_weather_get_start(void)
 {
-    xTaskCreatePinnedToCore(http_weathe_task, "http_run", 8192, NULL,3, NULL, tskNO_AFFINITY);
+    xTaskCreatePinnedToCore(http_weathe_task, "http_run", 4096, NULL,3, NULL, tskNO_AFFINITY);
 }

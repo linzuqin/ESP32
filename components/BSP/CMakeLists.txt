@@ -2,13 +2,15 @@ set(src_dirs
             IIC
             XL9555
             RGBLCD
-            TOUCH)
+            TOUCH
+            UART)
 
 set(include_dirs
             IIC
             XL9555
             RGBLCD
-            TOUCH)
+            TOUCH
+            UART)
 
 set(requires
             driver

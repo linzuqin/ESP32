@@ -4,17 +4,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "esp_system.h"
 #include "nvs_flash.h"
-#include "freertos_demo.h"
 #include "APP/WIFI.h"
 #include "APP/mqtt_alilot.h"
 #include "freertos/task.h"
 #include "freertos/event_groups.h"
 #include "APP/http_weather.h"
 #include "APP/ntp_time.h"
-#include "esp_system.h"
-#include "esp_sntp.h"
 #include "freertos/semphr.h"
 #include "freertos/queue.h"
 #include "APP/sensor.h"
@@ -23,6 +19,7 @@
 #include "xl9555.h"
 #include "lvgl_demo.h"
 #include "gui_guider.h"
+#include "UART.h"
 
 typedef struct{
     uint8_t lv_disp_init_flag;          //显示设备初始化完成标志位

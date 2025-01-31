@@ -42,7 +42,9 @@
     "lv_draw.h": "c",
     "main.h": "c",
     "http_weather.h": "c",
-    "time.h": "c"
+    "time.h": "c",
+    "esp_http_client.h": "c",
+    "esp_sntp.h": "c"
 },
 "idf.openOcdConfigs": [
     "board/esp32s3-builtin.cfg"

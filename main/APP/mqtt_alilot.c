@@ -362,13 +362,13 @@ void ALILOT_mqtt_set_ack(int code , char *message , char* id , char *version)
 /*返回当前版本号*/
 const char* Get_app_version(void)
 {
-    static char app_version[32];
+    static char app_version[32] = {0};
     if(app_version[0] == 0)
     {
         const esp_partition_t *running = esp_ota_get_running_partition();
         esp_app_desc_t running_desc;
         esp_ota_get_partition_description(running,&running_desc);
-        memcpy(app_version , running_desc.version,strlen(running_desc.version));
+        snprintf(app_version , sizeof(app_version) , "%s" , running_desc.version);
     }   
     return app_version;
 }
@@ -432,7 +432,7 @@ void Alilot_mqtt_run(void * arg )
     core_hex2str(password_hex , 16 , password_str,0);
     mqtt_cfg.credentials.authentication.password = password_str;
 
-    ESP_LOGI(TAG,"aliot connect->clientId:%s,username:%s,password:%s",client_id,username,password_str);
+    //ESP_LOGI(TAG,"aliot connect->clientId:%s,username:%s,password:%s",client_id,username,password_str);
 
     /*TLS证书*/
     mqtt_cfg.broker.verification.certificate = g_aliot_ca;
@@ -458,6 +458,6 @@ void Alilot_mqtt_run(void * arg )
 
 void Alilot_mqtt_start(void)
 {
-    xTaskCreatePinnedToCore(Alilot_mqtt_run, "aliot_run", 8192*2, NULL,3, NULL, tskNO_AFFINITY);
+    xTaskCreatePinnedToCore(Alilot_mqtt_run, "aliot_run", 4096, NULL,3, NULL, tskNO_AFFINITY);
 }
 

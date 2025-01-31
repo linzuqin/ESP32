@@ -56,6 +56,17 @@ void lvgl_task(void * params)
 }
 
 /**
+ * @brief       告诉LVGL运行时间
+ * @param       arg : 传入参数(未用到)
+ * @retval      无
+ */
+static void increase_lvgl_tick(void *arg)
+{
+    /* 告诉LVGL已经过了多少毫秒 */
+    lv_tick_inc(1);
+}
+
+/**
  * @brief       lvgl_demo入口函数
  * @param       无
  * @retval      无
@@ -83,6 +94,26 @@ void lvgl_demo(void)
 
     xTaskCreatePinnedToCore(lvgl_task, "lvgl_task", 4096, NULL,3, NULL, tskNO_AFFINITY);
 
+}
+
+/**
+* @brief    将内部缓冲区的内容刷新到显示屏上的特定区域
+* @note     可以使用 DMA 或者任何硬件在后台加速执行这个操作
+*           但是，需要在刷新完成后调用函数 'lv_disp_flush_ready()'
+* @param    disp_drv : 显示设备
+* @param    area : 要刷新的区域，包含了填充矩形的对角坐标
+* @param    color_map : 颜色数组
+* @retval   无
+*/
+static void lvgl_disp_flush_cb(lv_disp_drv_t *drv, const lv_area_t *area, lv_color_t *color_map)
+{
+    esp_lcd_panel_handle_t panel_handle = (esp_lcd_panel_handle_t)drv->user_data;
+
+    /* 特定区域打点 */
+    esp_lcd_panel_draw_bitmap(panel_handle, area->x1, area->y1, area->x2 + 1, area->y2 + 1, color_map);
+
+    /* 重要!!! 通知图形库，已经刷新完毕了 */
+    lv_disp_flush_ready(drv);
 }
 
 /**
@@ -177,36 +208,9 @@ void lv_port_indev_init(void)
     indev_touchpad = lv_indev_drv_register(&indev_drv);
 }
 
-/**
-* @brief    将内部缓冲区的内容刷新到显示屏上的特定区域
-* @note     可以使用 DMA 或者任何硬件在后台加速执行这个操作
-*           但是，需要在刷新完成后调用函数 'lv_disp_flush_ready()'
-* @param    disp_drv : 显示设备
-* @param    area : 要刷新的区域，包含了填充矩形的对角坐标
-* @param    color_map : 颜色数组
-* @retval   无
-*/
-static void lvgl_disp_flush_cb(lv_disp_drv_t *drv, const lv_area_t *area, lv_color_t *color_map)
-{
-    esp_lcd_panel_handle_t panel_handle = (esp_lcd_panel_handle_t)drv->user_data;
 
-    /* 特定区域打点 */
-    esp_lcd_panel_draw_bitmap(panel_handle, area->x1, area->y1, area->x2 + 1, area->y2 + 1, color_map);
 
-    /* 重要!!! 通知图形库，已经刷新完毕了 */
-    lv_disp_flush_ready(drv);
-}
 
-/**
- * @brief       告诉LVGL运行时间
- * @param       arg : 传入参数(未用到)
- * @retval      无
- */
-static void increase_lvgl_tick(void *arg)
-{
-    /* 告诉LVGL已经过了多少毫秒 */
-    lv_tick_inc(1);
-}
 
 /**
  * @brief       获取触摸屏设备的状态

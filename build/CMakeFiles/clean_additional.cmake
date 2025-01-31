@@ -3,8 +3,8 @@ cmake_minimum_required(VERSION 3.16)
 
 if("${CONFIG}" STREQUAL "" OR "${CONFIG}" STREQUAL "")
   file(REMOVE_RECURSE
-  "01_lvgl_transplant_project.bin"
-  "01_lvgl_transplant_project.map"
+  "WIFI_DEMO.bin"
+  "WIFI_DEMO.map"
   "bootloader\\bootloader.bin"
   "bootloader\\bootloader.elf"
   "bootloader\\bootloader.map"

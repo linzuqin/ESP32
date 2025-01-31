@@ -10,7 +10,7 @@ D:/project/ESP-project/project/demo/wifi_demo/build/CMakeFiles/monitor.dir
 D:/project/ESP-project/project/demo/wifi_demo/build/CMakeFiles/flash.dir
 D:/project/ESP-project/project/demo/wifi_demo/build/CMakeFiles/encrypted-flash.dir
 D:/project/ESP-project/project/demo/wifi_demo/build/CMakeFiles/_project_elf_src.dir
-D:/project/ESP-project/project/demo/wifi_demo/build/CMakeFiles/01_lvgl_transplant_project.elf.dir
+D:/project/ESP-project/project/demo/wifi_demo/build/CMakeFiles/WIFI_DEMO.elf.dir
 D:/project/ESP-project/project/demo/wifi_demo/build/CMakeFiles/size.dir
 D:/project/ESP-project/project/demo/wifi_demo/build/CMakeFiles/size-files.dir
 D:/project/ESP-project/project/demo/wifi_demo/build/CMakeFiles/size-components.dir

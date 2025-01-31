@@ -13,7 +13,7 @@ void digital_clock_1_timer(lv_timer_t *timer)
     clock_count_24(&timeinfo.tm_hour, &timeinfo.tm_min, &timeinfo.tm_sec);
     if (lv_obj_is_valid(guider_ui.time_text))
     {
-            lv_dclock_set_text_fmt(guider_ui.time_text,"%02d:%02d:%02d",timeinfo.tm_hour, timeinfo.tm_min, timeinfo.tm_sec);
+        lv_dclock_set_text_fmt(guider_ui.time_text,"%02d:%02d:%02d",timeinfo.tm_hour, timeinfo.tm_min, timeinfo.tm_sec);
     }
 }
 
@@ -51,7 +51,7 @@ void sntp_task(void *param){
     // 成功获取网络时间后停止NTP请求，不然设备重启后会造成获取网络时间失败的现象
     // 大概是服务器时根据心跳时间来删除客户端的，如果不是stop结束的客户端，下次连接服务器时就会出错
 	esp_sntp_stop();
-    ESP_LOGI(TAG  , "ESP NTP Finish");
+    //ESP_LOGI(TAG  , "ESP NTP Finish");
 
     /*初始化时获取时间设置到LVGL界面上*/
     time(&now);                 // 获取网络时间, 64bit的秒计数     
@@ -69,12 +69,12 @@ void sntp_task(void *param){
 
     while (1)
     {   
-        time(&now);                         // 获取网络时间, 64bit的秒计数     
-        tzset();                            // 更新本地C库时间
-        localtime_r(&now, &timeinfo);       // 转换成具体的时间参数
+        // time(&now);                         // 获取网络时间, 64bit的秒计数     
+        // tzset();                            // 更新本地C库时间
+        // localtime_r(&now, &timeinfo);       // 转换成具体的时间参数
 
-        ESP_LOGI(TAG, "%4d-%02d-%02d %02d:%02d:%02d week:%d", timeinfo.tm_year + 1900, timeinfo.tm_mon + 1, 
-        timeinfo.tm_mday, timeinfo.tm_hour, timeinfo.tm_min, timeinfo.tm_sec, timeinfo.tm_wday); 
+        // ESP_LOGI(TAG, "%4d-%02d-%02d %02d:%02d:%02d week:%d", timeinfo.tm_year + 1900, timeinfo.tm_mon + 1, 
+        // timeinfo.tm_mday, timeinfo.tm_hour, timeinfo.tm_min, timeinfo.tm_sec, timeinfo.tm_wday); 
 
         vTaskDelay(600000 / portTICK_PERIOD_MS);
     }
@@ -82,5 +82,5 @@ void sntp_task(void *param){
 
 void ntp_task_start(void)
 {
-    xTaskCreatePinnedToCore(sntp_task, "sntp_time_task", 4096, NULL,3, NULL, tskNO_AFFINITY);
+    xTaskCreatePinnedToCore(sntp_task, "sntp_time_task", 2048, NULL,3, NULL, tskNO_AFFINITY);
 }
