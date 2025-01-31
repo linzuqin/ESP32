@@ -18,11 +18,6 @@
  ****************************************************************************************************
  */
 
-#include "nvs_flash.h"
-#include "iic.h"
-#include "xl9555.h"
-#include "lvgl_demo.h"
-#include "gui_guider.h"
 #include "main.h"
 lv_ui guider_ui;
 
@@ -64,7 +59,7 @@ void app_main(void)
         EventBits_t bits = xEventGroupWaitBits(s_wifi_ev,EV_WIFI_CONNECTED_BIT,pdTRUE,pdFALSE,pdMS_TO_TICKS(5000));
         if(bits&EV_WIFI_CONNECTED_BIT)
         {
-            //Alilot_mqtt_start();
+            Alilot_mqtt_start();
             http_weather_get_start();   
             ntp_task_start();
             ESP_LOGI("main","finish");   

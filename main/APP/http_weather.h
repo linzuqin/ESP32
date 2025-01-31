@@ -56,7 +56,7 @@ typedef struct{
     char* text;     //天气
     char* code;     //天气编号
     char* details;  //天气编号对应的天气详情
-    char* temp;     //温度
+    char temp[50];     //温度
 }Weather_data_t;
 
 /*天气数据结构体*/

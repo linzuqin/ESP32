@@ -60,51 +60,51 @@ void setup_scr_app(lv_ui *ui)
     lv_obj_set_style_shadow_width(ui->app_cont_1, 0, LV_PART_MAIN|LV_STATE_DEFAULT);
 
     //Write codes app_datetext_1
-    ui->app_datetext_1 = lv_label_create(ui->app);
-    lv_label_set_text(ui->app_datetext_1, "2025/01/04");
-    lv_obj_set_style_text_align(ui->app_datetext_1, LV_TEXT_ALIGN_CENTER, 0);
-    lv_obj_add_flag(ui->app_datetext_1, LV_OBJ_FLAG_CLICKABLE);
-    lv_obj_add_event_cb(ui->app_datetext_1, app_datetext_1_event_handler, LV_EVENT_ALL, NULL);
-    lv_obj_set_pos(ui->app_datetext_1, 606, 8);
-    lv_obj_set_size(ui->app_datetext_1, 194, 43);
+    ui->date_text = lv_label_create(ui->app);
+    lv_label_set_text(ui->date_text, "2025/01/04");
+    lv_obj_set_style_text_align(ui->date_text, LV_TEXT_ALIGN_CENTER, 0);
+    lv_obj_add_flag(ui->date_text, LV_OBJ_FLAG_CLICKABLE);
+    lv_obj_add_event_cb(ui->date_text, app_datetext_1_event_handler, LV_EVENT_ALL, NULL);
+    lv_obj_set_pos(ui->date_text, 606, 8);
+    lv_obj_set_size(ui->date_text, 194, 43);
 
     //Write style for app_datetext_1, Part: LV_PART_MAIN, State: LV_STATE_DEFAULT.
-    lv_obj_set_style_text_color(ui->app_datetext_1, lv_color_hex(0xffffff), LV_PART_MAIN|LV_STATE_DEFAULT);
-    lv_obj_set_style_text_font(ui->app_datetext_1, &lv_font_Alatsi_Regular_28, LV_PART_MAIN|LV_STATE_DEFAULT);
-    lv_obj_set_style_text_opa(ui->app_datetext_1, 255, LV_PART_MAIN|LV_STATE_DEFAULT);
-    lv_obj_set_style_text_letter_space(ui->app_datetext_1, 2, LV_PART_MAIN|LV_STATE_DEFAULT);
-    lv_obj_set_style_text_align(ui->app_datetext_1, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN|LV_STATE_DEFAULT);
-    lv_obj_set_style_bg_opa(ui->app_datetext_1, 0, LV_PART_MAIN|LV_STATE_DEFAULT);
-    lv_obj_set_style_border_width(ui->app_datetext_1, 0, LV_PART_MAIN|LV_STATE_DEFAULT);
-    lv_obj_set_style_radius(ui->app_datetext_1, 0, LV_PART_MAIN|LV_STATE_DEFAULT);
-    lv_obj_set_style_pad_top(ui->app_datetext_1, 7, LV_PART_MAIN|LV_STATE_DEFAULT);
-    lv_obj_set_style_pad_right(ui->app_datetext_1, 0, LV_PART_MAIN|LV_STATE_DEFAULT);
-    lv_obj_set_style_pad_left(ui->app_datetext_1, 0, LV_PART_MAIN|LV_STATE_DEFAULT);
-    lv_obj_set_style_shadow_width(ui->app_datetext_1, 0, LV_PART_MAIN|LV_STATE_DEFAULT);
+    lv_obj_set_style_text_color(ui->date_text, lv_color_hex(0xffffff), LV_PART_MAIN|LV_STATE_DEFAULT);
+    lv_obj_set_style_text_font(ui->date_text, &lv_font_Alatsi_Regular_28, LV_PART_MAIN|LV_STATE_DEFAULT);
+    lv_obj_set_style_text_opa(ui->date_text, 255, LV_PART_MAIN|LV_STATE_DEFAULT);
+    lv_obj_set_style_text_letter_space(ui->date_text, 2, LV_PART_MAIN|LV_STATE_DEFAULT);
+    lv_obj_set_style_text_align(ui->date_text, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN|LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui->date_text, 0, LV_PART_MAIN|LV_STATE_DEFAULT);
+    lv_obj_set_style_border_width(ui->date_text, 0, LV_PART_MAIN|LV_STATE_DEFAULT);
+    lv_obj_set_style_radius(ui->date_text, 0, LV_PART_MAIN|LV_STATE_DEFAULT);
+    lv_obj_set_style_pad_top(ui->date_text, 7, LV_PART_MAIN|LV_STATE_DEFAULT);
+    lv_obj_set_style_pad_right(ui->date_text, 0, LV_PART_MAIN|LV_STATE_DEFAULT);
+    lv_obj_set_style_pad_left(ui->date_text, 0, LV_PART_MAIN|LV_STATE_DEFAULT);
+    lv_obj_set_style_shadow_width(ui->date_text, 0, LV_PART_MAIN|LV_STATE_DEFAULT);
 
     //Write codes app_digital_clock_1
     static bool app_digital_clock_1_timer_enabled = false;
-    ui->app_digital_clock_1 = lv_dclock_create(ui->app, "21:34:16");
+    ui->time_text = lv_dclock_create(ui->app, "21:34:16");
     if (!app_digital_clock_1_timer_enabled) {
         lv_timer_create(app_digital_clock_1_timer, 1000, NULL);
         app_digital_clock_1_timer_enabled = true;
     }
-    lv_obj_set_pos(ui->app_digital_clock_1, 0, 8);
-    lv_obj_set_size(ui->app_digital_clock_1, 180, 43);
+    lv_obj_set_pos(ui->time_text, 0, 8);
+    lv_obj_set_size(ui->time_text, 180, 43);
 
     //Write style for app_digital_clock_1, Part: LV_PART_MAIN, State: LV_STATE_DEFAULT.
-    lv_obj_set_style_radius(ui->app_digital_clock_1, 0, LV_PART_MAIN|LV_STATE_DEFAULT);
-    lv_obj_set_style_text_color(ui->app_digital_clock_1, lv_color_hex(0xffffff), LV_PART_MAIN|LV_STATE_DEFAULT);
-    lv_obj_set_style_text_font(ui->app_digital_clock_1, &lv_font_montserratMedium_35, LV_PART_MAIN|LV_STATE_DEFAULT);
-    lv_obj_set_style_text_opa(ui->app_digital_clock_1, 255, LV_PART_MAIN|LV_STATE_DEFAULT);
-    lv_obj_set_style_text_letter_space(ui->app_digital_clock_1, 0, LV_PART_MAIN|LV_STATE_DEFAULT);
-    lv_obj_set_style_text_align(ui->app_digital_clock_1, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN|LV_STATE_DEFAULT);
-    lv_obj_set_style_bg_opa(ui->app_digital_clock_1, 0, LV_PART_MAIN|LV_STATE_DEFAULT);
-    lv_obj_set_style_pad_top(ui->app_digital_clock_1, 7, LV_PART_MAIN|LV_STATE_DEFAULT);
-    lv_obj_set_style_pad_right(ui->app_digital_clock_1, 0, LV_PART_MAIN|LV_STATE_DEFAULT);
-    lv_obj_set_style_pad_bottom(ui->app_digital_clock_1, 0, LV_PART_MAIN|LV_STATE_DEFAULT);
-    lv_obj_set_style_pad_left(ui->app_digital_clock_1, 0, LV_PART_MAIN|LV_STATE_DEFAULT);
-    lv_obj_set_style_shadow_width(ui->app_digital_clock_1, 0, LV_PART_MAIN|LV_STATE_DEFAULT);
+    lv_obj_set_style_radius(ui->time_text, 0, LV_PART_MAIN|LV_STATE_DEFAULT);
+    lv_obj_set_style_text_color(ui->time_text, lv_color_hex(0xffffff), LV_PART_MAIN|LV_STATE_DEFAULT);
+    lv_obj_set_style_text_font(ui->time_text, &lv_font_montserratMedium_35, LV_PART_MAIN|LV_STATE_DEFAULT);
+    lv_obj_set_style_text_opa(ui->time_text, 255, LV_PART_MAIN|LV_STATE_DEFAULT);
+    lv_obj_set_style_text_letter_space(ui->time_text, 0, LV_PART_MAIN|LV_STATE_DEFAULT);
+    lv_obj_set_style_text_align(ui->time_text, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN|LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui->time_text, 0, LV_PART_MAIN|LV_STATE_DEFAULT);
+    lv_obj_set_style_pad_top(ui->time_text, 7, LV_PART_MAIN|LV_STATE_DEFAULT);
+    lv_obj_set_style_pad_right(ui->time_text, 0, LV_PART_MAIN|LV_STATE_DEFAULT);
+    lv_obj_set_style_pad_bottom(ui->time_text, 0, LV_PART_MAIN|LV_STATE_DEFAULT);
+    lv_obj_set_style_pad_left(ui->time_text, 0, LV_PART_MAIN|LV_STATE_DEFAULT);
+    lv_obj_set_style_shadow_width(ui->time_text, 0, LV_PART_MAIN|LV_STATE_DEFAULT);
 
     //Write codes app_weather_button
     ui->app_weather_button = lv_imgbtn_create(ui->app);
@@ -459,27 +459,27 @@ void setup_scr_app(lv_ui *ui)
     lv_obj_set_style_clip_corner(ui->app_temp_picture, true, LV_PART_MAIN|LV_STATE_DEFAULT);
 
     //Write codes app_temp
-    ui->app_temp = lv_label_create(ui->app);
-    lv_label_set_text(ui->app_temp, "25.6");
-    lv_label_set_long_mode(ui->app_temp, LV_LABEL_LONG_WRAP);
-    lv_obj_set_pos(ui->app_temp, 257, 20);
-    lv_obj_set_size(ui->app_temp, 78, 26);
+    ui->temp_data = lv_label_create(ui->app);
+    lv_label_set_text(ui->temp_data, "25.6");
+    lv_label_set_long_mode(ui->temp_data, LV_LABEL_LONG_WRAP);
+    lv_obj_set_pos(ui->temp_data, 257, 20);
+    lv_obj_set_size(ui->temp_data, 78, 26);
 
     //Write style for app_temp, Part: LV_PART_MAIN, State: LV_STATE_DEFAULT.
-    lv_obj_set_style_border_width(ui->app_temp, 0, LV_PART_MAIN|LV_STATE_DEFAULT);
-    lv_obj_set_style_radius(ui->app_temp, 0, LV_PART_MAIN|LV_STATE_DEFAULT);
-    lv_obj_set_style_text_color(ui->app_temp, lv_color_hex(0xffffff), LV_PART_MAIN|LV_STATE_DEFAULT);
-    lv_obj_set_style_text_font(ui->app_temp, &lv_font_montserratMedium_24, LV_PART_MAIN|LV_STATE_DEFAULT);
-    lv_obj_set_style_text_opa(ui->app_temp, 255, LV_PART_MAIN|LV_STATE_DEFAULT);
-    lv_obj_set_style_text_letter_space(ui->app_temp, 2, LV_PART_MAIN|LV_STATE_DEFAULT);
-    lv_obj_set_style_text_line_space(ui->app_temp, 0, LV_PART_MAIN|LV_STATE_DEFAULT);
-    lv_obj_set_style_text_align(ui->app_temp, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN|LV_STATE_DEFAULT);
-    lv_obj_set_style_bg_opa(ui->app_temp, 0, LV_PART_MAIN|LV_STATE_DEFAULT);
-    lv_obj_set_style_pad_top(ui->app_temp, 0, LV_PART_MAIN|LV_STATE_DEFAULT);
-    lv_obj_set_style_pad_right(ui->app_temp, 0, LV_PART_MAIN|LV_STATE_DEFAULT);
-    lv_obj_set_style_pad_bottom(ui->app_temp, 0, LV_PART_MAIN|LV_STATE_DEFAULT);
-    lv_obj_set_style_pad_left(ui->app_temp, 0, LV_PART_MAIN|LV_STATE_DEFAULT);
-    lv_obj_set_style_shadow_width(ui->app_temp, 0, LV_PART_MAIN|LV_STATE_DEFAULT);
+    lv_obj_set_style_border_width(ui->temp_data, 0, LV_PART_MAIN|LV_STATE_DEFAULT);
+    lv_obj_set_style_radius(ui->temp_data, 0, LV_PART_MAIN|LV_STATE_DEFAULT);
+    lv_obj_set_style_text_color(ui->temp_data, lv_color_hex(0xffffff), LV_PART_MAIN|LV_STATE_DEFAULT);
+    lv_obj_set_style_text_font(ui->temp_data, &lv_font_montserratMedium_24, LV_PART_MAIN|LV_STATE_DEFAULT);
+    lv_obj_set_style_text_opa(ui->temp_data, 255, LV_PART_MAIN|LV_STATE_DEFAULT);
+    lv_obj_set_style_text_letter_space(ui->temp_data, 2, LV_PART_MAIN|LV_STATE_DEFAULT);
+    lv_obj_set_style_text_line_space(ui->temp_data, 0, LV_PART_MAIN|LV_STATE_DEFAULT);
+    lv_obj_set_style_text_align(ui->temp_data, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN|LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui->temp_data, 0, LV_PART_MAIN|LV_STATE_DEFAULT);
+    lv_obj_set_style_pad_top(ui->temp_data, 0, LV_PART_MAIN|LV_STATE_DEFAULT);
+    lv_obj_set_style_pad_right(ui->temp_data, 0, LV_PART_MAIN|LV_STATE_DEFAULT);
+    lv_obj_set_style_pad_bottom(ui->temp_data, 0, LV_PART_MAIN|LV_STATE_DEFAULT);
+    lv_obj_set_style_pad_left(ui->temp_data, 0, LV_PART_MAIN|LV_STATE_DEFAULT);
+    lv_obj_set_style_shadow_width(ui->temp_data, 0, LV_PART_MAIN|LV_STATE_DEFAULT);
 
     //Write codes app_label_2
     ui->app_label_2 = lv_label_create(ui->app);

@@ -13,7 +13,13 @@
 #include <time.h>
 #include <sys/time.h>
 #include "esp_sntp.h"
-
+#include "lvgl.h"
+#include "../generated/gui_guider.h"
+#include "../generated/events_init.h"
+#include "esp_log.h"
+#include "lvgl.h"
+#include "../generated/gui_guider.h"
+#include "../generated/events_init.h"
 void esp_initialize_sntp(void);
 
 void ntp_task_start(void);

@@ -20,6 +20,9 @@
 #include "APP/sensor.h"
 #include "iic.h"
 #include "ltdc.h"
+#include "xl9555.h"
+#include "lvgl_demo.h"
+#include "gui_guider.h"
 
 typedef struct{
     uint8_t lv_disp_init_flag;          //显示设备初始化完成标志位

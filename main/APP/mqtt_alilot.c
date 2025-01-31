@@ -62,7 +62,7 @@ void mqtt_event_callback(void* event_handler_arg,
                                     int32_t event_id,
                                     void* event_data)
 {
-    esp_mqtt_event_handle_t data = (esp_mqtt_event_handle_t)event_data;
+    esp_mqtt_event_handle_t event = (esp_mqtt_event_handle_t)event_data;
     switch(event_id)
     {
         case MQTT_EVENT_CONNECTED:      //MQTT连接成功
@@ -86,19 +86,19 @@ void mqtt_event_callback(void* event_handler_arg,
             break;
 
         case MQTT_EVENT_DATA:
-            ESP_LOGI(TAG,"TOPIC:%s",data->topic);
-            ESP_LOGI(TAG,"DATA: %s",data->data);
-            if(strstr(data->topic , SET_TOPIC) != NULL)
+            ESP_LOGI(TAG,"TOPIC=%.*s\r\n", event->topic_len, event->topic);
+            ESP_LOGI(TAG,"DATA=%.*s\r\n", event->data_len, event->data);
+            if(strstr(event->topic , SET_TOPIC) != NULL)
             {
-                cJSON* Property_js = cJSON_Parse(data->data);
+                cJSON* Property_js = cJSON_Parse(event->data);
                 cJSON* Params_js = cJSON_GetObjectItem(Property_js , "params");
                 cJSON* ID = cJSON_GetObjectItem(Property_js , "id");
                 cJSON* version = cJSON_GetObjectItem(Property_js , "version");
                
-                if(Params_js)
+                if(Params_js != NULL)
                 {
                     cJSON* root = Params_js->child;
-                    while(root)
+                    while(root != NULL)
                     {
                         for(int i=0;i<Alilot_Model_NUM;i++)
                         {
@@ -127,9 +127,9 @@ void mqtt_event_callback(void* event_handler_arg,
                 cJSON_Delete(Property_js);
             }
 
-            else if((strstr(data->topic , OTA_UPGRADE_TOPIC)!=NULL) || (strstr(data->topic,ALILOT_OTA_GET_REPLY_TOPIC)!=NULL))
+            else if((strstr(event->topic , OTA_UPGRADE_TOPIC)!=NULL) || (strstr(event->topic,ALILOT_OTA_GET_REPLY_TOPIC)!=NULL))
             {
-                cJSON* params_js = cJSON_Parse(data->data);
+                cJSON* params_js = cJSON_Parse(event->data);
                 cJSON* data_js = cJSON_GetObjectItem(params_js,"data");
                 cJSON* url_js = cJSON_GetObjectItem(data_js,"url");
                 alilot_ota_config(url_js->valuestring,matt_ota_callback);
@@ -452,12 +452,12 @@ void Alilot_mqtt_run(void * arg )
 
 
         xSemaphoreGive(sign); /* 释放互斥信号量 */
-        vTaskDelay(60*1000/portTICK_PERIOD_MS);
+        vTaskDelay(10*1000/portTICK_PERIOD_MS);
     }
 }
 
 void Alilot_mqtt_start(void)
 {
-    xTaskCreatePinnedToCore(Alilot_mqtt_run, "aliot_run", 4096, NULL,3, NULL, tskNO_AFFINITY);
+    xTaskCreatePinnedToCore(Alilot_mqtt_run, "aliot_run", 8192*2, NULL,3, NULL, tskNO_AFFINITY);
 }
 

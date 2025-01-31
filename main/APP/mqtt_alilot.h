@@ -73,6 +73,9 @@
 /*阿里云物理模型数量*/
 #define Alilot_Model_NUM    10
 
+/*最大接收数据大小*/
+#define Alilot_MAX_RX_LEN       2048
+
 /*上报数据结构体*/
 typedef struct{
     char *data_str;

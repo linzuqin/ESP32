@@ -26,13 +26,32 @@
 #include "demos/lv_demos.h"
 #include "../generated/gui_guider.h"
 #include "../generated/events_init.h"
+#include <time.h>
+#include <sys/time.h>
+#include "esp_timer.h"
+#include "lvgl.h"
+#include "http_weather.h"
+
+extern lv_ui guider_ui;
+extern Weather_t Weather_data;
+
 
 void lvgl_task(void * params)
 {
+    uint16_t count = 0;
     while (1)
     {
+        count ++;
+        if(count >= 100)
+        {
+            count = 0;
+
+            lv_label_set_text(guider_ui.temp_data , Weather_data.weather.temp);
+        }
         lv_timer_handler();             /* LVGL计时器 */
         vTaskDelay(pdMS_TO_TICKS(10));  /* 延时10毫秒 */
+ 
+
     }
 }
 

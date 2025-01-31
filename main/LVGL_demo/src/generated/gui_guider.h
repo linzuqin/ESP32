@@ -125,6 +125,11 @@ typedef struct
 	lv_obj_t *music_humi_picture;
 	lv_obj_t *music_imgbtn_1;
 	lv_obj_t *music_imgbtn_1_label;
+
+	lv_obj_t *date_text;
+	lv_obj_t *time_text;
+	lv_obj_t *temp_data;
+	lv_obj_t *humi_data;
 }lv_ui;
 
 typedef void (*ui_setup_scr_t)(lv_ui * ui);

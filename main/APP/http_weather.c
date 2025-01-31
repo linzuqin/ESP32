@@ -37,6 +37,7 @@ void weather_data_LOGI(Weather_t data)
         // timeinfo.tm_mday, timeinfo.tm_hour, timeinfo.tm_min, timeinfo.tm_sec, timeinfo.tm_wday); 
     ESP_LOGI(TAG,"NOW_TIME:%4d-%02d-%02d %02d:%02d:%02d week:%d", timeinfo.tm_year + 1900, timeinfo.tm_mon + 1, 
         timeinfo.tm_mday, timeinfo.tm_hour, timeinfo.tm_min, timeinfo.tm_sec, timeinfo.tm_wday);
+
 }
 
 /*天气数据解析*/
@@ -82,7 +83,8 @@ static void cJSON_Weather_data_parse(char *data)
     cJSON* now = cJSON_GetObjectItem(result,"now");
     Weather_data.weather.text = cJSON_GetObjectItem(now,"text")->valuestring;
     Weather_data.weather.code = cJSON_GetObjectItem(now,"code")->valuestring;
-    Weather_data.weather.temp = cJSON_GetObjectItem(now,"temperature")->valuestring;
+    memcpy(Weather_data.weather.temp , cJSON_GetObjectItem(now,"temperature")->valuestring , strlen(cJSON_GetObjectItem(now,"temperature")->valuestring));
+    // Weather_data.weather.temp = cJSON_GetObjectItem(now,"temperature")->valuestring;
     if(atoi(Weather_data.weather.code) >= 0 && atoi(Weather_data.weather.code) <= WEATHER_TYPE_NUM)
     {
         Weather_data.weather.details = weather_details[atoi(Weather_data.weather.code)];
@@ -94,6 +96,47 @@ static void cJSON_Weather_data_parse(char *data)
    __fail_exit:
         cJSON_Delete(weather_data);
         return;
+}
+
+static void http_get_weather(void)
+{
+    memset(Weather_data.data , 0 , DATA_MAX_LEN);
+    memset(Weather_data.last_update_time , 0 , 50);
+
+    Weather_data.data_len = 0;
+    Get_Weather_Flag = 1;
+    if(Get_Weather_Flag == 1)
+    {
+        esp_err_t err = esp_http_client_open(esp_http_client_handle , 0);
+        if(err != ESP_OK)
+        {
+            ESP_LOGE(TAG, "Failed to open HTTP connection: %s", esp_err_to_name(err));
+            goto __fail_delay;
+        }
+
+        Weather_data.data_len = esp_http_client_fetch_headers(esp_http_client_handle);
+        if(Weather_data.data_len == 0 || Weather_data.data_len > DATA_MAX_LEN )
+        {
+            ESP_LOGE(TAG, "DATA_LEN error");
+            goto __fail_delay;                
+        }
+
+        if(esp_http_client_read_response(esp_http_client_handle , Weather_data.data , DATA_MAX_LEN) < 0)
+        {
+            ESP_LOGE(TAG, "Failed to read response");
+            goto __fail_delay;        
+        }
+        ESP_LOGI(TAG, "HTTP GET Status = %d, content_length = %lld",
+        esp_http_client_get_status_code(esp_http_client_handle),     //获取响应状态信息
+        esp_http_client_get_content_length(esp_http_client_handle)); //获取响应信息长度
+        //ESP_LOGI(TAG,"%s", Weather_data.data);
+        cJSON_Weather_data_parse(Weather_data.data);
+        esp_http_client_close(esp_http_client_handle);  // 断开连接
+        memset(&Weather_data.data, 0, sizeof(Weather_data.data));
+    }
+    __fail_delay:
+        for (size_t i = 0; i < REQUEST_INTERVAL * 60; i++)
+            vTaskDelay(10000 / portTICK_PERIOD_MS);  
 }
 
 /*http任务*/
@@ -109,49 +152,15 @@ void http_weathe_task( void * arg )
 
     /*发送GET请求*/
     esp_http_client_set_method(esp_http_client_handle , HTTP_METHOD_GET);
+    http_get_weather();
     while(1)
     {
         xSemaphoreTake(sign, portMAX_DELAY); /* 获取互斥信号量 */
-        
-        memset(Weather_data.data , 0 , DATA_MAX_LEN);
-        memset(Weather_data.last_update_time , 0 , 50);
 
-        Weather_data.data_len = 0;
-        Get_Weather_Flag = 1;
-        if(Get_Weather_Flag == 1)
-        {
-            esp_err_t err = esp_http_client_open(esp_http_client_handle , 0);
-            if(err != ESP_OK)
-            {
-                ESP_LOGE(TAG, "Failed to open HTTP connection: %s", esp_err_to_name(err));
-                goto __fail_delay;
-            }
-
-            Weather_data.data_len = esp_http_client_fetch_headers(esp_http_client_handle);
-            if(Weather_data.data_len == 0 || Weather_data.data_len > DATA_MAX_LEN )
-            {
-                ESP_LOGE(TAG, "DATA_LEN error");
-                goto __fail_delay;                
-            }
-
-            if(esp_http_client_read_response(esp_http_client_handle , Weather_data.data , DATA_MAX_LEN) < 0)
-            {
-                ESP_LOGE(TAG, "Failed to read response");
-                goto __fail_delay;        
-            }
-            ESP_LOGI(TAG, "HTTP GET Status = %d, content_length = %lld",
-            esp_http_client_get_status_code(esp_http_client_handle),     //获取响应状态信息
-            esp_http_client_get_content_length(esp_http_client_handle)); //获取响应信息长度
-            //ESP_LOGI(TAG,"%s", Weather_data.data);
-            cJSON_Weather_data_parse(Weather_data.data);
-            esp_http_client_close(esp_http_client_handle);  // 断开连接
-            memset(&Weather_data.data, 0, sizeof(Weather_data.data));
-        }
+        http_get_weather();
+       
         xSemaphoreGive(sign); /* 释放互斥信号量 */
-    __fail_delay:
-        for (size_t i = 0; i < REQUEST_INTERVAL * 60; i++)
-            vTaskDelay(1000 / portTICK_PERIOD_MS);    
-            }
+    }
 }
 
 void http_weather_get_start(void)

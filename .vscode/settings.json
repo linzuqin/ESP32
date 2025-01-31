@@ -39,7 +39,10 @@
     "lv_label.h": "c",
     "lv_obj.h": "c",
     "esp_mac.h": "c",
-    "lv_draw.h": "c"
+    "lv_draw.h": "c",
+    "main.h": "c",
+    "http_weather.h": "c",
+    "time.h": "c"
 },
 "idf.openOcdConfigs": [
     "board/esp32s3-builtin.cfg"

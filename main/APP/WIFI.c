@@ -154,5 +154,5 @@ void WIFI_TASK_INIT(void)
     s_wifi_event_group = xEventGroupCreate();
     xEventGroupSetBits(s_wifi_event_group,WIFI_FAIL_BIT);
 
-    xTaskCreatePinnedToCore(WIFI_TASK, "wifi_manager", 4096, NULL, 1, NULL, tskNO_AFFINITY);
+    xTaskCreatePinnedToCore(WIFI_TASK, "wifi_manager", 4096 * 4, NULL, 1, NULL, tskNO_AFFINITY);
 }
